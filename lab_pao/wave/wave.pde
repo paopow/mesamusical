@@ -16,17 +16,34 @@ float scale_factor = 0.5;
 float screen_width;
 float screen_height;
 
-float notes1[][] = {{0,  e.Q},
+float notes1[][] = {{0, e.Q},
                    {0, e.Q},
-                   {0,  e.SQ}, 
                    {0, e.SQ}, 
-                   {0,  e.SQ}, 
+                   {0, e.SQ}, 
+                   {0, e.SQ}, 
                    {e.FS4, e.SQ},{e.E4,  e.SQ}, 
                    {e.CS5, e.SQ}, 
                    {e.B4,  e.SQ}, 
                    {e.FS4, e.SQ}, 
                    {e.D5,  e.SQ}, 
                    {e.CS5, e.SQ}};
+                   
+float chord_c[][] = 
+{{e.C4, e.Q},
+ {e.E4, e.Q},
+ {e.G4, e.Q},
+ {0, e.C}
+};
+
+float chord_cs[][] = 
+{{e.C4, e.Q},
+ {e.DS4, e.Q},
+ {e.G4, e.Q},
+ {0, e.C}
+};
+
+
+
   
 PFont font;
 void setup(){
@@ -97,7 +114,7 @@ void addTuioObject(TuioObject tobj){
   e.setPartChannel(nf(tobj.getSymbolID(),2),tobj.getSymbolID()%NUM_INSTRUMENTS);
   e.addScorePart("score",nf(tobj.getSymbolID(),2));
   //if(tobj.getSymbolID()%2 == 0){
-  e.createPhrase(nf(tobj.getSymbolID(),2),notes1);
+  e.createPhrase(nf(tobj.getSymbolID(),2),chord_cs);
   e.repeatPhrase(nf(tobj.getSymbolID(),2), 200);
   //}else{
     // e.createPhrase("phrase1",notes2);
