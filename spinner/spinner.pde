@@ -46,6 +46,7 @@ void setup()
 
 void draw()
 {
+  background(0);
   drawCircle();
   drawRadar();
   synchronized(tags) {

@@ -33,7 +33,7 @@ static int curr_sc = 0;
 // these are some helper variables which are used
 // to create scalable graphical feedback
 float cursor_size = 15;
-float object_size = 60;
+float object_size = 120;
 float table_size = 760;
 float scale_factor = 1;
 PFont font;
@@ -84,13 +84,26 @@ class Ripple {
   }
 }
 
+void drawCircle()
+{
+   background(0);
+   float radius= 0.9*min(screen.width/2,screen.height/2);
+   stroke(70, 173, 237);
+   fill(70, 173, 237);
+   ellipseMode(CENTER);
+
+   ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
+     //  stroke(70, 173, 237);
+    //fill(70, 173, 237);
+   //ellipse(screen.width/2, screen.height/2,0.05*radius,0.05*radius);
+   
+} 
+
 void setup()
 {
-  //size(screen.width,screen.height);
-  size(640,480);
-  noStroke();
-  fill(0);
-  
+  size(screen.width,screen.height);
+  drawCircle();
+
   loop();
   frameRate(30);
   //noLoop();
@@ -110,11 +123,26 @@ void setup()
   count = 0;
 }
 
+
+float getTransformedX(TuioObject tobj) {
+  float x = tobj.getY() * screen.width;
+  if(x < 650) x = x + ((650-x)/4);
+  else x = x - ((x-650)/2);
+  x = x +50;
+  return x;
+}
+
+float getTransformedY(TuioObject tobj) {
+  float y = screen.height - (tobj.getX() * screen.height);
+  if(getTransformedX(tobj) > 500 && y < 450) y = y - 100;
+  return y;
+}
+
 // within the draw method we retrieve a Vector (List) of TuioObject and TuioCursor (polling)
 // from the TuioProcessing client and then loop over both lists to draw the graphical feedback.
 void draw()
 {
-  background(255);
+  drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
@@ -122,15 +150,15 @@ void draw()
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-     stroke(0);
-     fill(0);
+     stroke(136, 194, 13);
+     fill(136, 194, 13);
      pushMatrix();
-     translate(tobj.getScreenX(width),tobj.getScreenY(height));
+     translate(getTransformedX(tobj),getTransformedY(tobj));
      rotate(tobj.getAngle());
      rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
      popMatrix();
-     fill(255);
-     text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+     //fill(255);
+     //text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
    }
    
 //DRAWING THE RIPPLES   
