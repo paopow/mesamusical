@@ -5,11 +5,11 @@ import ddf.minim.signals.*;
 static final String A_SHARP = "../data/piano_A_sharp.mp3";
 static final String G_SHARP = "../data/piano_G_sharp.mp3";
 static final String F_SHARP = "../data/piano_F_sharp.mp3";
-static final String F = "../data/piano_F.mp3";
+static final String F = "../data/piano_Fshort.mp3";
 static final String D_SHARP = "../data/piano_D_sharp.mp3";
-static final String D = "../data/piano_D.mp3";
-static final String A = "../data/piano_A.mp3";
-static final String B = "../data/piano_B.mp3";
+static final String D = "../data/piano_Dshort.mp3";
+static final String A = "../data/piano_Ashort.mp3";
+static final String B = "../data/piano_Bshort.mp3";
 static final String C_SHARP = "../data/piano_C_sharp.mp3";
 static final String C = "../data/piano_Cshort.mp3";
 static final String E = "../data/piano_Eshort.mp3";
@@ -47,10 +47,11 @@ void setup()
 
 void draw()
 {
+  synchronized(tags) {
    //update sound
    Iterator i = tags.entrySet().iterator();
    crossRadar = false;
-   
+  
   // println("Number of notes currently playing: " + notesPlaying.size());
    while(i.hasNext()){
       Map.Entry curr =  (Map.Entry)i.next();
@@ -77,6 +78,7 @@ void draw()
         }
       }
    }
+  }
    //update graphics
    drawCircle();
    drawRadar();
@@ -142,18 +144,22 @@ boolean isCrossRadar(TuioObject tobj)
 {
   //center of circle is 0,0
   //flip x and y since we invert projector
-  float circle_x = 2 * (tobj.getY() - 0.50);
-  float circle_y = -2 * (tobj.getX() - 0.50);
+  //float circle_x = 2 * (tobj.getY() - 0.50);
+  //float circle_y = -2 * (tobj.getX() - 0.50);
+  float circle_x = (getTransformedX(tobj)/screen.width - 0.50);
+  float circle_y = -(getTransformedY(tobj)/screen.height - 0.50);
+  double tag_angle = (Math.atan2(circle_x, circle_y) + (3 * PI/2))% (2 * PI);
   //println("x: " + unit_x + ", y: " + unit_y);
-  double tag_angle = (Math.atan2(circle_x,circle_y) + (3 * PI/2)) % (2 * PI);
-  //println("Curr angle: " + tag_angle + ", cursor_angle: " + cursor_angle);
-  if(abs((float)tag_angle - cursor_angle) < 0.2 ) return true;
+ // double tag_angle = (Math.atan2(circle_x,circle_y) + (3 * PI/2)) % (2 * PI);
+  println("Curr angle: " + tag_angle + ", cursor_angle: " + cursor_angle);
+  if(abs((float)tag_angle - cursor_angle) < 0.2 || abs((float)tag_angle - cursor_angle) > (2 * PI - 0.2)) return true;
   else return false;
 
 }
 
 void markTags()
 {
+  synchronized(tags) {
    Iterator i = tags.entrySet().iterator();
    stroke(70, 173, 237);
    fill(136, 194, 13);
@@ -167,9 +173,9 @@ void markTags()
           fill(136, 194, 13);
        }
       //flip x and y
-   float x = curr_tag.getY() * screen.width;
-        float y = screen.height - (curr_tag.getX() * screen.height);
-        println(curr_tag + ":" + "(" + x + "," + y + ")");
+       float x = getTransformedX(curr_tag);
+        float y = getTransformedY(curr_tag);
+        //println(curr_tag.getSymbolID() + ":" + "(" + x + "," + y + ")");
       //  float x = 2 * (curr_tag.getX() - 0.50) * screen.width;
         //float y = -2 * (curr_tag.getY() - 0.50) * screen.height;
         //float new_x = 2 *
@@ -177,14 +183,21 @@ void markTags()
        //float new_x = -(x - 2 * (x - (3/10 * (y - 550))));
         //float new_y = y - 2 * (y - (10 * x/3 + 550));
         //println("Old x: " + x + ", new x: " + new_x + "; Old y: " + y + ", new y: " + new_y);
-        pushMatrix();
          //rotate(-PI/30);
         //translate(-10,-110);
             
-         rect(x, y ,120, 120);
-        popMatrix();
+         rect(x, y ,110, 110);
    }
    }
+  }
+}
+
+float getTransformedX(TuioObject tobj) {
+  return tobj.getY() * screen.width;
+}
+
+float getTransformedY(TuioObject tobj) {
+  return screen.height - (tobj.getX() * screen.height);
 }
 
 // called when an object is added to the scene
