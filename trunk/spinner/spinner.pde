@@ -24,7 +24,7 @@ Minim minim;
 AudioOutput out;
 HashMap tags = new HashMap(50);
 float cursor_angle; //in rad
-float d_angle = 0.06;
+float d_angle = 0.03;
 float radius;
 boolean crossRadar = false;
 HashMap notesPlaying = new HashMap(50);
@@ -42,11 +42,12 @@ void setup()
   cursor_angle = 0;
   init_notePlayers();
 
-  
 }
 
 void draw()
 {
+  drawCircle();
+  drawRadar();
   synchronized(tags) {
    //update sound
    Iterator i = tags.entrySet().iterator();
@@ -58,7 +59,14 @@ void draw()
       TuioObject curr_tag = (TuioObject)curr.getValue();
       String key = nf(curr_tag.getSymbolID(),2);
       int curr_note = curr_tag.getSymbolID()%NUM_PLAYABLE_NOTES; 
+        float x = getTransformedX(curr_tag);
+        float y = getTransformedY(curr_tag);
+        println(curr_tag.getSymbolID() + ":" + "(" + x + "," + y + ")");
+  
+            
       if(isCrossRadar(curr_tag)) {
+        stroke(255, 113, 113);
+        fill(136, 194, 13);
         crossRadar = true;
         String file;  
         if(!notePlayers[curr_note].isPlaying())
@@ -68,6 +76,8 @@ void draw()
         
       }
       else {
+        stroke(70, 173, 237);
+        fill(136, 194, 13);
         crossRadar = false;
         if(!notePlayers[curr_note].isPlaying())
           notePlayers[curr_note].rewind();
@@ -77,12 +87,12 @@ void draw()
           
         }
       }
+      rectMode(CENTER);
+      rect(x, y ,110, 110);
    }
   }
    //update graphics
-   drawCircle();
-   drawRadar();
-   markTags(); //for debugging
+   //markTags(); //for debugging
    //println(tags.size());
    
    //move the cursor
@@ -117,9 +127,9 @@ void drawCircle()
    ellipseMode(CENTER);
 
    ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
-   //stroke(0);
-   //fill(0);
-   //ellipse(screen.width/2, screen.height/2,0.2*radius,0.2*radius);
+       stroke(70, 173, 237);
+    fill(70, 173, 237);
+   ellipse(screen.width/2, screen.height/2,0.05*radius,0.05*radius);
    
 } 
 
@@ -151,53 +161,24 @@ boolean isCrossRadar(TuioObject tobj)
   double tag_angle = (Math.atan2(circle_x, circle_y) + (3 * PI/2))% (2 * PI);
   //println("x: " + unit_x + ", y: " + unit_y);
  // double tag_angle = (Math.atan2(circle_x,circle_y) + (3 * PI/2)) % (2 * PI);
-  println("Curr angle: " + tag_angle + ", cursor_angle: " + cursor_angle);
+  //println("Curr angle: " + tag_angle + ", cursor_angle: " + cursor_angle);
   if(abs((float)tag_angle - cursor_angle) < 0.2 || abs((float)tag_angle - cursor_angle) > (2 * PI - 0.2)) return true;
   else return false;
 
 }
 
-void markTags()
-{
-  synchronized(tags) {
-   Iterator i = tags.entrySet().iterator();
-   stroke(70, 173, 237);
-   fill(136, 194, 13);
-   ellipseMode(CENTER);
-   synchronized(tags){
-   while(i.hasNext()){
-      Map.Entry curr =  (Map.Entry)i.next();
-      TuioObject curr_tag = (TuioObject)curr.getValue();
-      if(isCrossRadar(curr_tag)) {
-          stroke(255, 113, 113);
-          fill(136, 194, 13);
-       }
-      //flip x and y
-       float x = getTransformedX(curr_tag);
-        float y = getTransformedY(curr_tag);
-        //println(curr_tag.getSymbolID() + ":" + "(" + x + "," + y + ")");
-      //  float x = 2 * (curr_tag.getX() - 0.50) * screen.width;
-        //float y = -2 * (curr_tag.getY() - 0.50) * screen.height;
-        //float new_x = 2 *
-        //float new_y = y;
-       //float new_x = -(x - 2 * (x - (3/10 * (y - 550))));
-        //float new_y = y - 2 * (y - (10 * x/3 + 550));
-        //println("Old x: " + x + ", new x: " + new_x + "; Old y: " + y + ", new y: " + new_y);
-         //rotate(-PI/30);
-        //translate(-10,-110);
-            
-         rect(x, y ,110, 110);
-   }
-   }
-  }
-}
-
 float getTransformedX(TuioObject tobj) {
-  return tobj.getY() * screen.width;
+  float x = tobj.getY() * screen.width;
+  if(x < 650) x = x + ((650-x)/4);
+  else x = x - ((x-650)/2);
+  x = x +50;
+  return x;
 }
 
 float getTransformedY(TuioObject tobj) {
-  return screen.height - (tobj.getX() * screen.height);
+  float y = screen.height - (tobj.getX() * screen.height);
+  if(getTransformedX(tobj) > 500 && y < 450) y = y - 100;
+  return y;
 }
 
 // called when an object is added to the scene
