@@ -49,18 +49,34 @@ class Ripple {
   float radius;
   float x;
   float y;
+  int id;
+  ArrayList intersect; //associated with all of the ripples that overlap with it
   
-  Ripple(float rad, float xPos, float yPos) {
+  Ripple(float rad, float xPos, float yPos, int idTag, ArrayList aIntersect) {
     radius = rad;
     x = xPos;
     y = yPos;
+    id = idTag;
+    intersect = aIntersect;
   }
   
   boolean update() {
     radius += RIPPLE_GROWTH_RATE;
     x += RIPPLE_GROWTH_RATE/2;
     y += RIPPLE_GROWTH_RATE/2    ;
-    
+    for (int i = 0; i < rippleList.length(); i++) {
+      Ripple thisRipple = rippleList.get(i);
+      float xCoord = abs(x - thisRipple.x);
+      float yCoord = abs(y - thisRipple.y);
+      PVector v = new PVector(xCoord, yCoord);
+      if (Pradius + rippleList.get(i).radius > v.mag() {
+          if (!intersect.contains(thisRipple)) {
+            //play the sounds
+            
+            intersect.add(thisRipple); 
+          }
+      }
+    }
     return (radius > MAX_RADIUS);
   }
 }
@@ -114,6 +130,7 @@ void draw()
      text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
    }
    
+//DRAWING THE RIPPLES   
    for (int i = rippleList.size() - 1; i >= 0; i--) {
      Ripple temp = (Ripple) rippleList.get(i);
      
@@ -132,6 +149,7 @@ void draw()
      
      popMatrix();  
    }
+//END DRAW
    
    Vector tuioCursorList = tuioClient.getTuioCursors();
    for (int i=0;i<tuioCursorList.size();i++) {
@@ -207,8 +225,8 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2));
+  ArrayList alreadyIntersected;
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2, tobj.getSymbolId(), alreadyIntersected));
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
@@ -260,3 +278,5 @@ float getNote(int id)
   }
   return note;
 }
+
+
