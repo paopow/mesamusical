@@ -26,7 +26,7 @@ import TUIO.*;
 TuioProcessing tuioClient;
 
 static final int NUM_NOTES = 7;
-static final int NUM_SC = 25;
+static final int NUM_SC = 4;
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
 static int curr_sc = 0;
 
@@ -42,7 +42,7 @@ ArrayList rippleList;
 float obj_size;
 final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
-final int ONE_OVER_RIPPLE_FREQUENCY = 3; //HERE
+final int ONE_OVER_RIPPLE_FREQUENCY = 10; //HERE
 int count; //HERE
 
 class Ripple {
@@ -64,16 +64,17 @@ class Ripple {
     radius += RIPPLE_GROWTH_RATE;
     x += RIPPLE_GROWTH_RATE/2;
     y += RIPPLE_GROWTH_RATE/2    ;
-    for (int i = 0; i < rippleList.length(); i++) {
-      Ripple thisRipple = rippleList.get(i);
+    for (int i = 0; i < rippleList.size(); i++) {
+      Ripple thisRipple = (Ripple) rippleList.get(i);
       float xCoord = abs(x - thisRipple.x);
       float yCoord = abs(y - thisRipple.y);
       PVector v = new PVector(xCoord, yCoord);
-      if (Pradius + rippleList.get(i).radius > v.mag() {
-          if (!intersect.contains(thisRipple)) {
-            //play the sounds
-            
-            intersect.add(thisRipple); 
+      if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) {
+          if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
+            int[] id = new int[1];
+            id[0] = thisRipple.id;
+            playNote(id);
+            intersect.add(((Ripple) rippleList.get(i)).id); 
           }
       }
     }
@@ -225,8 +226,8 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  ArrayList alreadyIntersected;
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2, tobj.getSymbolId(), alreadyIntersected));
+  ArrayList alreadyIntersected = new ArrayList();
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
@@ -240,8 +241,10 @@ void init_sc_array(){
 void playNote(int[] id){
   float[] chord = new float[id.length];
   for(int i = 0; i < chord.length; i++){
-   chord[i] = getNote(id[i]); 
+   chord[0] = getNote(id[0]); 
   }
+  //float note = getNote(id[0]);
+  //sc_array[curr_sc].playNote(note, 100, 1.0);
   sc_array[curr_sc].playChord(chord,100,1.0);
   curr_sc = (curr_sc + 1)%NUM_SC;
 }
