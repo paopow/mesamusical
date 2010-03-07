@@ -52,7 +52,8 @@ void setup(){
   e.setPartChannel("clean_guitar",4);
   
  
-  
+  e.createPhrase("phrase");
+  e.addPhraseNoteList("phrase", notes);
 }
 
 void draw(){
@@ -84,3 +85,11 @@ void updateTuioObject(TuioObject tobj){
 void refresh(TuioTime bundleTime){
    redraw(); 
 }
+
+void mousePressed() {
+  e.stopMIDI();
+  int inst = (int) random(0,127);
+  e.setPhraseInstrument("phrase", inst);
+  e.playMIDI("phrase");
+}
+
