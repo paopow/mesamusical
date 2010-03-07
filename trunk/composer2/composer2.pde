@@ -4,17 +4,21 @@ import jmetude.*;
 //constants for instruments
 static final int NUM_INSTRUMENTS = 5;
 
-float notes[][] = {{60,1.0}, 
-                   {62,1.0}, 
-                   {64,1.0}, 
-                   {65,1.0}, 
-                   {67,1.0}, 
-                   {69,1.0}, 
-                   {71,1.0}, 
-                   {72,4.0}};
-
 TuioProcessing tuioClient;
 Etude e;
+
+float notes[][] = {{e.E4,  e.SQ},
+                   {e.FS4, e.SQ},
+                   {e.B4,  e.SQ}, 
+                   {e.CS5, e.SQ}, 
+                   {e.D5,  e.SQ}, 
+                   {e.FS4, e.SQ}, 
+                   {e.E4,  e.SQ}, 
+                   {e.CS5, e.SQ}, 
+                   {e.B4,  e.SQ}, 
+                   {e.FS4, e.SQ}, 
+                   {e.D5,  e.SQ}, 
+                   {e.CS5, e.SQ}};
 
 
 void setup(){
@@ -36,10 +40,17 @@ void setup(){
   e.addScorePart("main_score", "clean_guitar");
   
   e.setPartInstrument("piano", e.PIANO);
-  e.setPartInstrument("piano", e.FLUTE);
-  e.setPartInstrument("piano", e.CH);
-  e.setPartInstrument("piano", e.PIANO);
-  e.setPartInstrument("piano", e.PIANO);
+  e.setPartInstrument("flute", e.FLUTE);
+  e.setPartInstrument("church_organ", e.CHURCH_ORGAN);
+  e.setPartInstrument("drum", e.DRUM);
+  e.setPartInstrument("clean_guitar", e.CLEAN_GUITAR);
+  
+  e.setPartChannel("piano",0);
+  e.setPartChannel("flute",1);
+  e.setPartChannel("church_organ",2);
+  e.setPartChannel("drum",3);
+  e.setPartChannel("clean_guitar",4);
+  
  
   
 }
@@ -50,14 +61,12 @@ void draw(){
 
 // called when an object is added to the scene
 void addTuioObject(TuioObject tobj){
-  synchronized(tags){
   //String key= nf(tobj.getSymbolID(),2);
   //tags.put(key,tobj);
   int symbol = tobj.getSymbolID()%NUM_INSTRUMENTS;
   
-  
   //println("add object" + symbol);
-  }
+  
 }
 
 // called when an object is removed from the scene
