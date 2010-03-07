@@ -1,24 +1,3 @@
-/*
-    TUIO processing demo - part of the reacTIVision project
-    http://reactivision.sourceforge.net/
-
-    Copyright (c) 2005-2009 Martin Kaltenbrunner <mkalten@iua.upf.edu>
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
 // we need to import the TUIO library
 // and declare a TuioProcessing client variable
 import arb.soundcipher.*;
@@ -49,7 +28,7 @@ class Ripple {
   float radius;
   float x;
   float y;
-  int id;
+  int id; //id of the block it came from
   ArrayList intersect; //associated with all of the ripples that overlap with it
   
   Ripple(float rad, float xPos, float yPos, int idTag, ArrayList aIntersect) {
@@ -69,7 +48,7 @@ class Ripple {
       float xCoord = abs(x - thisRipple.x);
       float yCoord = abs(y - thisRipple.y);
       PVector v = new PVector(xCoord, yCoord);
-      if (!this.equals(thisRipple)) {
+      if (this.id != thisRipple.id) {
         if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) { //AND MAKE SURE THAT THE RIPPLE ISN'T INTERSECTING WITH ITSELF--Janelle
             if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
               int[] id = new int[1];
