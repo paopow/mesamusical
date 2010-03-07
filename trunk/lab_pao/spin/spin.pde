@@ -5,6 +5,9 @@ TuioProcessing tuioClient;
 SoundCipher[] sc_array = new SoundCipher[14]; 
 SoundCipher sc = new SoundCipher(this);
 SCScore score = new SCScore();
+
+static int final 
+
 float[] pitches = {0, 4, 7, 9};
 static int curr_channel = 0;
 float object_size = 60;
@@ -255,12 +258,7 @@ class Bubble {
               println(curr_channel);
               sc_array[curr_channel].channel = curr_channel;
               sc_array[curr_channel].playNote(pitch,100,1.0);
-              //sc_array[0].playNote(pitch,100,1.0);
               curr_channel = (curr_channel+1)%14;
-             // sc.channel = curr_channel;
-             // 
-              //println(curr_channel);
-              //sc.playNote(pitch, 100, 1.0);
                //score.addNote(startTime, channel, instrument, pitch, dynamic, duration, articulation, pan);
      // score.addNote(1, 11, 0,60, 100, 0.5, 0.8, 64);
 //  score.addNote(0, 10, 0, 0, 72, 0.5, 0.8, 64);
