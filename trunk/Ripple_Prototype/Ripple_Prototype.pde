@@ -21,8 +21,14 @@
 
 // we need to import the TUIO library
 // and declare a TuioProcessing client variable
+import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
+
+static final int NUM_NOTES = 7;
+static final int NUM_SC = 25;
+SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
+static int curr_sc = 0;
 
 // these are some helper variables which are used
 // to create scalable graphical feedback
@@ -71,6 +77,9 @@ void setup()
   hint(ENABLE_NATIVE_FONTS);
   font = createFont("Arial", 18);
   scale_factor = height/table_size;
+  
+  //init sound
+  init_sc_array();
   
   // we create an instance of the TuioProcessing client
   // since we add "this" class as an argument the TuioProcessing class expects
@@ -199,4 +208,52 @@ void ripple(TuioObject tobj) {
   rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2));
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
+}
+
+void init_sc_array(){
+ for(int i = 0; i < sc_array.length; i++){
+   sc_array[i] = new SoundCipher(this);
+ } 
+}
+
+void playNote(int[] id){
+  float[] chord = new float[id.length];
+  for(int i = 0; i < chord.length; i++){
+   chord[i] = getNote(id[i]); 
+  }
+  sc_array[curr_sc].playChord(chord,100,1.0);
+  curr_sc = (curr_sc + 1)%NUM_SC;
+}
+
+float getNote(int id)
+{
+  float note;
+  id = id%NUM_NOTES;
+  switch (id){
+    case 0:
+      note = 60; // 'C'
+      break;
+    case 1:
+      note = 62; // 'D'
+      break;
+    case 2:
+      note = 64; // 'E'
+      break;
+    case 3:
+      note = 65; // 'F'
+      break;
+    case 4:
+      note = 67; // 'G'
+      break;
+    case 5:
+      note = 69; // 'A'
+      break;
+    case 6:
+      note = 71; // 'B'
+      break; 
+    default:
+      note = 60; // just return middle C
+      break;
+  }
+  return note;
 }
