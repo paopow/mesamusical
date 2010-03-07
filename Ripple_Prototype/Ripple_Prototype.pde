@@ -69,13 +69,15 @@ class Ripple {
       float xCoord = abs(x - thisRipple.x);
       float yCoord = abs(y - thisRipple.y);
       PVector v = new PVector(xCoord, yCoord);
-      if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) {
-          if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
-            int[] id = new int[1];
-            id[0] = thisRipple.id;
-            playNote(id);
-            intersect.add(((Ripple) rippleList.get(i)).id); 
-          }
+      if (!this.equals(thisRipple)) {
+        if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) { //AND MAKE SURE THAT THE RIPPLE ISN'T INTERSECTING WITH ITSELF--Janelle
+            if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
+              int[] id = new int[1];
+              id[0] = thisRipple.id;
+              playNote(id);
+              intersect.add(((Ripple) rippleList.get(i)).id); 
+            }
+        }
       }
     }
     return (radius > MAX_RADIUS);
