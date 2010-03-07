@@ -40,8 +40,10 @@ PFont font;
 
 ArrayList rippleList;
 float obj_size;
-int MAX_RADIUS = 400;
-int RIPPLE_GROWTH_RATE = 50;
+final int MAX_RADIUS = 250;
+final int RIPPLE_GROWTH_RATE = 2;
+final int ONE_OVER_RIPPLE_FREQUENCY = 3; //HERE
+int count; //HERE
 
 class Ripple {
   float radius;
@@ -86,6 +88,7 @@ void setup()
   // an implementation of the TUIO callback methods (see below)
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
+  count = 0;
 }
 
 // within the draw method we retrieve a Vector (List) of TuioObject and TuioCursor (polling)
@@ -172,7 +175,7 @@ void removeTuioObject(TuioObject tobj) {
 void updateTuioObject (TuioObject tobj) {
   println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
           +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
-  ripple(tobj);
+  if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
 }
 
 // called when a cursor is added to the scene
