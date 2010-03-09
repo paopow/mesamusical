@@ -61,7 +61,8 @@ void setup()
 
 void draw()
 {
-  background(bg);
+  //background(bg);
+  background(136, 194, 13);
   drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
@@ -234,86 +235,6 @@ void ripple(TuioObject tobj) {
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
 
-/****************************************
- class Bubble
- **************************************/
-class Bubble {
-  PVector location;
-  PVector velocity;
-  PVector acceleration;
-  float topspeed;
-  
-  
-  Bubble(float x,float y,float angle) { //PAOTODO: Change this later -> need velocity
-    location = new PVector(x,y);
-    velocity = new PVector(0,0);
-    acceleration = new PVector(cos(angle),sin(angle));
-    acceleration.normalize();
-    acceleration.mult(2);
-    println(acceleration.x+" "+acceleration.y);
-    topspeed = 4;
-  }
-
-  void update() {
-
-    // Our algorithm for calculating acceleration:
-    PVector blackHole = new PVector(screen.width/2, screen.height/2);
-   // PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
-    //dir.normalize();     // Normalize
-    //dir.mult(0.5);       // Scale 
-    //acceleration = dir;  // Set to acceleration
-
-    // Motion 101!  Velocity changes by acceleration.  Location changes by velocity.
-    velocity.add(acceleration);
-    velocity.limit(topspeed);
-    location.add(velocity);
-  }
-
-  void display() {
-    stroke(119,173,175);
-    fill(119,173,175);
-    ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
-  }
-  
-  boolean isOffScreen(){
-     return ((location.x > width)||(location.x < 0)||(location.y >height) ||(location.y<0));
-  }
-}
-
-/*****************************
-  class Shooter
- *******************************/
-class Shooter{
-  float x;
-  float y;
-  double tempo; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
-  float angle;
-  
-  Shooter(TuioObject clear_block){
-     x = clear_block.getX()*width;
-     y = clear_block.getY()*height;
-     angle = clear_block.getAngle();
-  } 
-  
-  void move(float new_x, float new_y){
-    x = new_x*width;
-    y = new_y*height;
-  }
-  
-  void set_angle(float tag_angle){
-     angle = tag_angle;
-  }
-  
-  void display(){
-    //draw the shooter => what should it be?
-    drawTurtle(x,y,angle);
-  }
-  
-  void shootBubble(){
-      bubbles.add(new Bubble(x,y,angle));
-  }
-  
-}
 
 void drawTurtle(float x, float y, float angle){
   stroke(120);  
@@ -327,46 +248,4 @@ void drawTurtle(float x, float y, float angle){
     ellipse(0, -object_size/2, object_size/3, object_size/3);
     ellipse(0,0,object_size, object_size);
   popMatrix();  
-}
-
-/****************************
- class Ripple
- ****************************/
-class Ripple {
-  float radius;
-  float x;
-  float y;
-  int id; //id of the block it came from
-  ArrayList intersect; //associated with all of the ripples that overlap with it
-  
-  Ripple(float rad, float xPos, float yPos, int idTag, ArrayList aIntersect) {
-    radius = rad;
-    x = xPos;
-    y = yPos;
-    id = idTag;
-    intersect = aIntersect;
-  }
-  
-  boolean update() {
-    radius += RIPPLE_GROWTH_RATE;
-    x += RIPPLE_GROWTH_RATE/2;
-    y += RIPPLE_GROWTH_RATE/2    ;
-    for (int i = 0; i < rippleList.size(); i++) {
-      Ripple thisRipple = (Ripple) rippleList.get(i);
-      float xCoord = abs(x - thisRipple.x);
-      float yCoord = abs(y - thisRipple.y);
-      PVector v = new PVector(xCoord, yCoord);
-      if (this.id != thisRipple.id) {
-        if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) { //AND MAKE SURE THAT THE RIPPLE ISN'T INTERSECTING WITH ITSELF--Janelle
-            if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
-              int[] id = new int[1];
-              id[0] = thisRipple.id;
-              playNote(id);
-              intersect.add(((Ripple) rippleList.get(i)).id); 
-            }
-        }
-      }
-    }
-    return (radius > MAX_RADIUS);
-  }
 }
