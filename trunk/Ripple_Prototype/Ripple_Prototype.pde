@@ -112,7 +112,9 @@ void draw()
    
 }
 
-// these callback methods are called whenever a TUIO event occurs
+/**********************************
+  Reactivision callbacks
+ *********************************/
 
 // called when an object is added to the scene
 void addTuioObject(TuioObject tobj) {
@@ -167,6 +169,10 @@ void ripple(TuioObject tobj) {
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
+
+/*************************
+ Audio functions
+ *************************/
 
 void init_sc_array(){
  for(int i = 0; i < sc_array.length; i++){
