@@ -21,7 +21,7 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 
-Shooter shooter;
+Shooter shooter = null;
 ArrayList bubbles;
 
 ArrayList rippleList;
@@ -64,12 +64,16 @@ void draw()
   float cur_size = cursor_size*scale_factor; 
   
    //-------dump test code here
-   //drawTurtle(0,0,0);
+     
+  if(shooter != null){
+    shooter.display();
+  }
    //------------------------
-
+  
   drawReactTags();
   drawRipples();
   drawBubbles();
+
 }
 
 void drawReactTags(){
@@ -133,11 +137,18 @@ void addTuioObject(TuioObject tobj) {
 }
 
 void removeTuioObject(TuioObject tobj) {
+  if(tobj.getSymbolID() == SHOOTER_ID){
+   shooter = null; 
+  }
   println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
   ripple(tobj);
 }
 
 void updateTuioObject (TuioObject tobj) {
+  if(tobj.getSymbolID() == SHOOTER_ID){
+    shooter.move(tobj.getX(),tobj.getY());
+    shooter.set_angle(tobj.getAngle());
+  }
   println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
           +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
   if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
@@ -184,10 +195,11 @@ void playNote(int[] id){
 }
 
 
+//id%NUM_NOTES = 0 -> low C. id%NUM_NOTES = 35 -> high C
 float getNote(int id)
 {
   id = id%NUM_NOTES; //48 is low C, 60 is mid C, 72 is high C 
-  return id + 48;
+  return id + 48; 
 }
 
 void ripple(TuioObject tobj) {
@@ -301,6 +313,7 @@ class Shooter{
   
   void display(){
     //draw the shooter => what should it be?
+    drawTurtle(x,y,angle);
   }
   
   void shootBubble(){
@@ -310,10 +323,15 @@ class Shooter{
 }
 
 void drawTurtle(float x, float y, float angle){
-  stroke(0);  
+  stroke(120);  
   fill(120); //PAOTODO change the color of the code later
   ellipseMode(CENTER);
-  ellipse(x,y,object_size, object_size);
+  pushMatrix();
+    translate(x,y);
+    rotate(angle);
+    ellipse(object_size/2, 0, object_size/3, object_size/3);
+    ellipse(0,0,object_size, object_size);
+  popMatrix();  
 }
 
 /****************************
