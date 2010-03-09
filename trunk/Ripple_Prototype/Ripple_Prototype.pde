@@ -4,7 +4,7 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
-static final int SHOOTER_ID = 0;
+static final int SHOOTER_ID = 35;
 static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
@@ -61,6 +61,7 @@ void setup()
 
 void draw()
 {
+
   //background(bg);
   background(136, 194, 13);
   drawCircle();
@@ -96,15 +97,17 @@ void drawReactTags(){
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-     stroke(0);
-     fill(0);
-     pushMatrix();
-     translate(tobj.getScreenX(width),tobj.getScreenY(height));
-     rotate(tobj.getAngle());
-     rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
-     popMatrix();
-     fill(255);
-     text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+     if(tobj.getSymbolID()!=SHOOTER_ID){ 
+       stroke(0);
+       fill(0);
+       pushMatrix();
+       translate(tobj.getScreenX(width),tobj.getScreenY(height));
+       rotate(tobj.getAngle());
+       rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
+       popMatrix();
+       fill(255);
+       text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+     }
    }
 }
 
@@ -120,7 +123,7 @@ void drawRipples(){
      
      if (temp.update()) {
        rippleList.remove(i);
-       println("Removed ripple");
+       //println("Removed ripple");
      } else {
        //println("Kept ripple. Radius:" + temp.radius);
      }
