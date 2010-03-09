@@ -163,7 +163,7 @@ void removeTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
    shooter = null; 
   }
-  println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
+  //println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
   ripple(tobj);
 }
 
@@ -172,22 +172,22 @@ void updateTuioObject (TuioObject tobj) {
     shooter.move(tobj.getX(),tobj.getY());
     shooter.set_angle(tobj.getAngle());
   }
-  println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
-          +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
+  //println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
+    //      +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
   if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
 }
 
 void addTuioCursor(TuioCursor tcur) {
-  println("add cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY());
+  //println("add cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY());
 }
 
 void updateTuioCursor (TuioCursor tcur) {
-  println("update cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY()
-          +" "+tcur.getMotionSpeed()+" "+tcur.getMotionAccel());
+  //println("update cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY()
+        //  +" "+tcur.getMotionSpeed()+" "+tcur.getMotionAccel());
 }
 
 void removeTuioCursor(TuioCursor tcur) {
-  println("remove cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+")");
+  //println("remove cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+")");
 }
 
 // called after each message bundle
@@ -239,16 +239,3 @@ void ripple(TuioObject tobj) {
 }
 
 
-void drawTurtle(float x, float y, float angle){
-  stroke(120);  
-  fill(120); 
-  //PAOTODO change the color of the code later
-  //PAOTODO: Draw the legs + animation for the turtle!
-  ellipseMode(CENTER);
-  pushMatrix();
-    translate(x,y);
-    rotate(angle);
-    ellipse(0, -object_size/2, object_size/3, object_size/3);
-    ellipse(0,0,object_size, object_size);
-  popMatrix();  
-}
