@@ -5,6 +5,7 @@ import TUIO.*;
 TuioProcessing tuioClient;
 
 static final int SHOOTER_ID = 0;
+static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 7;
 static final int NUM_SC = 4;
 
@@ -20,6 +21,7 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 
+Shooter shooter;
 ArrayList bubbles;
 
 ArrayList rippleList;
@@ -60,7 +62,17 @@ void draw()
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
-   
+  
+   //-------dump test code here
+   //drawTurtle(0,0,0);
+   //------------------------
+
+  drawReactTags();
+  drawRipples();
+  drawBubbles();
+}
+
+void drawReactTags(){
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
@@ -74,8 +86,9 @@ void draw()
      fill(255);
      text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
    }
-   
-//DRAWING THE RIPPLES   
+}
+
+void drawRipples(){  
    for (int i = rippleList.size() - 1; i >= 0; i--) {
      Ripple temp = (Ripple) rippleList.get(i);
      
@@ -93,19 +106,16 @@ void draw()
      }
      
      popMatrix();  
-   }
-//END DRAW
-   
-//DRAW BUBBLES
+   }  
+}
+
+void drawBubbles(){
   for (int i = 0; i < bubbles.size(); i++) {
     Bubble bubble = (Bubble) bubbles.get(i);
     bubble.update();
     bubble.checkEdges();
     bubble.display(); 
   }
-//END DRAW
-
-   
 }
 
 /**********************************
@@ -114,8 +124,13 @@ void draw()
 
 // called when an object is added to the scene
 void addTuioObject(TuioObject tobj) {
-  println("add object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle());
-  ripple(tobj);
+  if(tobj.getSymbolID() == SHOOTER_ID){
+    shooter = new Shooter(tobj);
+     //add shooter 
+  }else{
+    //add a stone 
+    ripple(tobj);
+  }
 }
 
 // called when an object is removed from the scene
@@ -256,7 +271,7 @@ class Bubble {
   void display() {
     stroke(119,173,175);
     fill(119,173,175);
-    ellipse(location.x,location.y,16,16); 
+    ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
   }
 
   void checkEdges() {
@@ -297,16 +312,15 @@ class Bubble {
   class Shooter
  *******************************/
 class Shooter{
-  TuioObject tag;
   float x;
   float y;
-  double tempo;
+  double tempo; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
   float angle;
   
   Shooter(TuioObject clear_block){
-     tag = clear_block;
      x = clear_block.getX();
      y = clear_block.getY();
+     angle = clear_block.getAngle();
   } 
   
   void move(float new_x, float new_y){
@@ -314,18 +328,25 @@ class Shooter{
     y = new_y;
   }
   
-  void set_angle(float angle){
-     
+  void set_angle(float tag_angle){
+     angle = tag_angle;
   }
   
   void display(){
-    
+    //draw the shooter => what should it be?
   }
   
   void shootBubble(){
       bubbles.add(new Bubble(0,0));
   }
   
+}
+
+void drawTurtle(float x, float y, float angle){
+  stroke(0);  
+  fill(120); //PAOTODO change the color of the code later
+  ellipseMode(CENTER);
+  ellipse(x,y,object_size, object_size);
 }
 
 /****************************
