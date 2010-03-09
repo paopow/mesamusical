@@ -26,8 +26,8 @@ ArrayList rippleList;
 float obj_size;
 final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
-final int ONE_OVER_RIPPLE_FREQUENCY = 10; //HERE
-int count; //HERE
+final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
+int count; 
 
 void setup()
 {
@@ -48,16 +48,12 @@ void setup()
   init_sc_array();
   
   bubbles = new ArrayList();
-  // we create an instance of the TuioProcessing client
-  // since we add "this" class as an argument the TuioProcessing class expects
-  // an implementation of the TUIO callback methods (see below)
+
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
 }
 
-// within the draw method we retrieve a Vector (List) of TuioObject and TuioCursor (polling)
-// from the TuioProcessing client and then loop over both lists to draw the graphical feedback.
 void draw()
 {
   background(255);
@@ -295,6 +291,41 @@ class Bubble {
      return false;
   }*/
 
+}
+
+/*****************************
+  class Shooter
+ *******************************/
+class Shooter{
+  TuioObject tag;
+  float x;
+  float y;
+  double tempo;
+  float angle;
+  
+  Shooter(TuioObject clear_block){
+     tag = clear_block;
+     x = clear_block.getX();
+     y = clear_block.getY();
+  } 
+  
+  void move(float new_x, float new_y){
+    x = new_x;
+    y = new_y;
+  }
+  
+  void set_angle(float angle){
+     
+  }
+  
+  void display(){
+    
+  }
+  
+  void shootBubble(){
+      bubbles.add(new Bubble(0,0));
+  }
+  
 }
 
 /****************************
