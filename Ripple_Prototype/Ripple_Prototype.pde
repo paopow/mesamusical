@@ -34,7 +34,6 @@ int count;
 void setup()
 {
   //size(screen.width,screen.height);
-  //size(640,480);
   size(screen.width, screen.height);
   noStroke();
   fill(0);
@@ -119,7 +118,7 @@ void drawRipples(){
        rippleList.remove(i);
        println("Removed ripple");
      } else {
-       println("Kept ripple. Radius:" + temp.radius);
+       //println("Kept ripple. Radius:" + temp.radius);
      }
      
      popMatrix();  
@@ -130,8 +129,11 @@ void drawBubbles(){
   for (int i = 0; i < bubbles.size(); i++) {
     Bubble bubble = (Bubble) bubbles.get(i);
     bubble.update();
-    bubble.checkEdges();
     bubble.display(); 
+    if(bubble.isOffScreen()){
+      bubbles.remove(i);
+      i--;
+    }
   }
 }
 
@@ -142,6 +144,7 @@ void drawBubbles(){
 void addTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
     shooter = new Shooter(tobj);
+    shooter.shootBubble();
      //add shooter 
   }else{
     //add a stone 
@@ -238,10 +241,13 @@ class Bubble {
   float topspeed;
   
   
-  Bubble(float x,float y) { //PAOTODO: Change this later -> need velocity
+  Bubble(float x,float y,float angle) { //PAOTODO: Change this later -> need velocity
     location = new PVector(x,y);
-    //location_original = new PVector(x,y);
     velocity = new PVector(0,0);
+    acceleration = new PVector(cos(angle),sin(angle));
+    acceleration.normalize();
+    acceleration.mult(2);
+    println(acceleration.x+" "+acceleration.y);
     topspeed = 4;
   }
 
@@ -249,10 +255,10 @@ class Bubble {
 
     // Our algorithm for calculating acceleration:
     PVector blackHole = new PVector(screen.width/2, screen.height/2);
-    PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
-    dir.normalize();     // Normalize
-    dir.mult(0.5);       // Scale 
-    acceleration = dir;  // Set to acceleration
+   // PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
+    //dir.normalize();     // Normalize
+    //dir.mult(0.5);       // Scale 
+    //acceleration = dir;  // Set to acceleration
 
     // Motion 101!  Velocity changes by acceleration.  Location changes by velocity.
     velocity.add(acceleration);
@@ -265,39 +271,10 @@ class Bubble {
     fill(119,173,175);
     ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
   }
-
-  void checkEdges() {
-
-    if (location.x > width) {
-      location.x = 0;
-    } else if (location.x < 0) {
-      location.x = width;
-    }
-
-    if (location.y > height) {
-      location.y = 0;
-    }  else if (location.y < 0) {
-      location.y = height;
-    }
   
+  boolean isOffScreen(){
+     return ((location.x > width)||(location.x < 0)||(location.y >height) ||(location.y<0));
   }
-  /*
-  boolean reachDest(){
-    
-     if (((location_original.x - screen.width/2)*(location.x - screen.width/2) <= 0)
-            &&((location_original.x - screen.width/2)*(location.x - screen.width/2) <= 0)){
-              println(curr_channel);
-              sc_array[curr_channel].channel = curr_channel;
-              sc_array[curr_channel].playNote(pitch,100,1.0);
-              curr_channel = (curr_channel+1)%14;
-               //score.addNote(startTime, channel, instrument, pitch, dynamic, duration, articulation, pan);
-     // score.addNote(1, 11, 0,60, 100, 0.5, 0.8, 64);
-//  score.addNote(0, 10, 0, 0, 72, 0.5, 0.8, 64);
-              return true;
-     }
-     return false;
-  }*/
-
 }
 
 /*****************************
@@ -310,14 +287,24 @@ class Shooter{
   float angle;
   
   Shooter(TuioObject clear_block){
+<<<<<<< .mine
+     x = clear_block.getX()*width;
+     y = clear_block.getY()*height;
+=======
      x = clear_block.getX();
      y = clear_block.getY();
+>>>>>>> .r29
      angle = clear_block.getAngle();
   } 
   
   void move(float new_x, float new_y){
+<<<<<<< .mine
+    x = new_x*width;
+    y = new_y*height;
+=======
     x = new_x;
     y = new_y;
+>>>>>>> .r29
   }
   
   void set_angle(float tag_angle){
@@ -330,19 +317,21 @@ class Shooter{
   }
   
   void shootBubble(){
-      bubbles.add(new Bubble(0,0));
+      bubbles.add(new Bubble(x,y,angle));
   }
   
 }
 
 void drawTurtle(float x, float y, float angle){
   stroke(120);  
-  fill(120); //PAOTODO change the color of the code later
+  fill(120); 
+  //PAOTODO change the color of the code later
+  //PAOTODO: Draw the legs + animation for the turtle!
   ellipseMode(CENTER);
   pushMatrix();
     translate(x,y);
     rotate(angle);
-    ellipse(object_size/2, 0, object_size/3, object_size/3);
+    ellipse(0, -object_size/2, object_size/3, object_size/3);
     ellipse(0,0,object_size, object_size);
   popMatrix();  
 }
