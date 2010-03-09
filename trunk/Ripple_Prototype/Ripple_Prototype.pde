@@ -4,18 +4,23 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
+static final int SHOOTER_ID = 0;
 static final int NUM_NOTES = 7;
 static final int NUM_SC = 4;
+
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
+SCScore score = new SCScore(); //may not need this
 static int curr_sc = 0;
 
 // these are some helper variables which are used
 // to create scalable graphical feedback
 float cursor_size = 15;
-float object_size = 120;
+float object_size = 60;
 float table_size = 760;
 float scale_factor = 1;
 PFont font;
+
+ArrayList bubbles;
 
 ArrayList rippleList;
 float obj_size;
@@ -24,65 +29,13 @@ final int RIPPLE_GROWTH_RATE = 2;
 final int ONE_OVER_RIPPLE_FREQUENCY = 10; //HERE
 int count; //HERE
 
-class Ripple {
-  float radius;
-  float x;
-  float y;
-  int id; //id of the block it came from
-  ArrayList intersect; //associated with all of the ripples that overlap with it
-  
-  Ripple(float rad, float xPos, float yPos, int idTag, ArrayList aIntersect) {
-    radius = rad;
-    x = xPos;
-    y = yPos;
-    id = idTag;
-    intersect = aIntersect;
-  }
-  
-  boolean update() {
-    radius += RIPPLE_GROWTH_RATE;
-    x += RIPPLE_GROWTH_RATE/2;
-    y += RIPPLE_GROWTH_RATE/2    ;
-    for (int i = 0; i < rippleList.size(); i++) {
-      Ripple thisRipple = (Ripple) rippleList.get(i);
-      float xCoord = abs(x - thisRipple.x);
-      float yCoord = abs(y - thisRipple.y);
-      PVector v = new PVector(xCoord, yCoord);
-      if (this.id != thisRipple.id) {
-        if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) { //AND MAKE SURE THAT THE RIPPLE ISN'T INTERSECTING WITH ITSELF--Janelle
-            if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
-              int[] id = new int[1];
-              id[0] = thisRipple.id;
-              playNote(id);
-              intersect.add(((Ripple) rippleList.get(i)).id); 
-            }
-        }
-      }
-    }
-    return (radius > MAX_RADIUS);
-  }
-}
-
-void drawCircle()
-{
-   background(0);
-   float radius= 0.9*min(screen.width/2,screen.height/2);
-   stroke(70, 173, 237);
-   fill(70, 173, 237);
-   ellipseMode(CENTER);
-
-   ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
-     //  stroke(70, 173, 237);
-    //fill(70, 173, 237);
-   //ellipse(screen.width/2, screen.height/2,0.05*radius,0.05*radius);
-   
-} 
-
 void setup()
 {
-  size(screen.width,screen.height);
-  drawCircle();
-
+  //size(screen.width,screen.height);
+  size(640,480);
+  noStroke();
+  fill(0);
+  
   loop();
   frameRate(30);
   //noLoop();
@@ -94,6 +47,7 @@ void setup()
   //init sound
   init_sc_array();
   
+  bubbles = new ArrayList();
   // we create an instance of the TuioProcessing client
   // since we add "this" class as an argument the TuioProcessing class expects
   // an implementation of the TUIO callback methods (see below)
@@ -102,26 +56,11 @@ void setup()
   count = 0;
 }
 
-
-float getTransformedX(TuioObject tobj) {
-  float x = tobj.getY() * screen.width;
-  if(x < 650) x = x + ((650-x)/4);
-  else x = x - ((x-650)/2);
-  x = x +50;
-  return x;
-}
-
-float getTransformedY(TuioObject tobj) {
-  float y = screen.height - (tobj.getX() * screen.height);
-  if(getTransformedX(tobj) > 500 && y < 450) y = y - 100;
-  return y;
-}
-
 // within the draw method we retrieve a Vector (List) of TuioObject and TuioCursor (polling)
 // from the TuioProcessing client and then loop over both lists to draw the graphical feedback.
 void draw()
 {
-  drawCircle();
+  background(255);
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
@@ -129,15 +68,15 @@ void draw()
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-     stroke(136, 194, 13);
-     fill(136, 194, 13);
+     stroke(0);
+     fill(0);
      pushMatrix();
-     translate(getTransformedX(tobj),getTransformedY(tobj));
+     translate(tobj.getScreenX(width),tobj.getScreenY(height));
      rotate(tobj.getAngle());
      rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
      popMatrix();
-     //fill(255);
-     //text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+     fill(255);
+     text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
    }
    
 //DRAWING THE RIPPLES   
@@ -161,27 +100,15 @@ void draw()
    }
 //END DRAW
    
-   Vector tuioCursorList = tuioClient.getTuioCursors();
-   for (int i=0;i<tuioCursorList.size();i++) {
-      TuioCursor tcur = (TuioCursor)tuioCursorList.elementAt(i);
-      Vector pointList = tcur.getPath();
-      
-      if (pointList.size()>0) {
-        stroke(0,0,255);
-        TuioPoint start_point = (TuioPoint)pointList.firstElement();;
-        for (int j=0;j<pointList.size();j++) {
-           TuioPoint end_point = (TuioPoint)pointList.elementAt(j);
-           line(start_point.getScreenX(width),start_point.getScreenY(height),end_point.getScreenX(width),end_point.getScreenY(height));
-           start_point = end_point;
-        }
-        
-        stroke(192,192,192);
-        fill(192,192,192);
-        ellipse( tcur.getScreenX(width), tcur.getScreenY(height),cur_size,cur_size);
-        fill(0);
-        text(""+ tcur.getCursorID(),  tcur.getScreenX(width)-5,  tcur.getScreenY(height)+5);
-      }
-   }
+//DRAW BUBBLES
+  for (int i = 0; i < bubbles.size(); i++) {
+    Bubble bubble = (Bubble) bubbles.get(i);
+    bubble.update();
+    bubble.checkEdges();
+    bubble.display(); 
+  }
+//END DRAW
+
    
 }
 
@@ -236,7 +163,7 @@ void ripple(TuioObject tobj) {
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
   ArrayList alreadyIntersected = new ArrayList();
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2,tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
@@ -292,3 +219,116 @@ float getNote(int id)
 }
 
 
+/****************************************
+ class Bubble
+ **************************************/
+class Bubble {
+  PVector location;
+  PVector velocity;
+  PVector acceleration;
+  float topspeed;
+  
+  
+  Bubble(float x,float y) { //PAOTODO: Change this later -> need velocity
+    location = new PVector(x,y);
+    //location_original = new PVector(x,y);
+    velocity = new PVector(0,0);
+    topspeed = 4;
+  }
+
+  void update() {
+
+    // Our algorithm for calculating acceleration:
+    PVector blackHole = new PVector(screen.width/2, screen.height/2);
+    PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
+    dir.normalize();     // Normalize
+    dir.mult(0.5);       // Scale 
+    acceleration = dir;  // Set to acceleration
+
+    // Motion 101!  Velocity changes by acceleration.  Location changes by velocity.
+    velocity.add(acceleration);
+    velocity.limit(topspeed);
+    location.add(velocity);
+  }
+
+  void display() {
+    stroke(119,173,175);
+    fill(119,173,175);
+    ellipse(location.x,location.y,16,16); 
+  }
+
+  void checkEdges() {
+
+    if (location.x > width) {
+      location.x = 0;
+    } else if (location.x < 0) {
+      location.x = width;
+    }
+
+    if (location.y > height) {
+      location.y = 0;
+    }  else if (location.y < 0) {
+      location.y = height;
+    }
+  
+  }
+  /*
+  boolean reachDest(){
+    
+     if (((location_original.x - screen.width/2)*(location.x - screen.width/2) <= 0)
+            &&((location_original.x - screen.width/2)*(location.x - screen.width/2) <= 0)){
+              println(curr_channel);
+              sc_array[curr_channel].channel = curr_channel;
+              sc_array[curr_channel].playNote(pitch,100,1.0);
+              curr_channel = (curr_channel+1)%14;
+               //score.addNote(startTime, channel, instrument, pitch, dynamic, duration, articulation, pan);
+     // score.addNote(1, 11, 0,60, 100, 0.5, 0.8, 64);
+//  score.addNote(0, 10, 0, 0, 72, 0.5, 0.8, 64);
+              return true;
+     }
+     return false;
+  }*/
+
+}
+
+/****************************
+ class Ripple
+ ****************************/
+class Ripple {
+  float radius;
+  float x;
+  float y;
+  int id; //id of the block it came from
+  ArrayList intersect; //associated with all of the ripples that overlap with it
+  
+  Ripple(float rad, float xPos, float yPos, int idTag, ArrayList aIntersect) {
+    radius = rad;
+    x = xPos;
+    y = yPos;
+    id = idTag;
+    intersect = aIntersect;
+  }
+  
+  boolean update() {
+    radius += RIPPLE_GROWTH_RATE;
+    x += RIPPLE_GROWTH_RATE/2;
+    y += RIPPLE_GROWTH_RATE/2    ;
+    for (int i = 0; i < rippleList.size(); i++) {
+      Ripple thisRipple = (Ripple) rippleList.get(i);
+      float xCoord = abs(x - thisRipple.x);
+      float yCoord = abs(y - thisRipple.y);
+      PVector v = new PVector(xCoord, yCoord);
+      if (this.id != thisRipple.id) {
+        if (thisRipple.radius + ((Ripple) rippleList.get(i)).radius > v.mag()) { //AND MAKE SURE THAT THE RIPPLE ISN'T INTERSECTING WITH ITSELF--Janelle
+            if (!intersect.contains( ((Ripple) rippleList.get(i)).id )) {
+              int[] id = new int[1];
+              id[0] = thisRipple.id;
+              playNote(id);
+              intersect.add(((Ripple) rippleList.get(i)).id); 
+            }
+        }
+      }
+    }
+    return (radius > MAX_RADIUS);
+  }
+}
