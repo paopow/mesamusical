@@ -122,7 +122,6 @@ void drawBubbles(){
   Reactivision callbacks
  *********************************/
 
-// called when an object is added to the scene
 void addTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
     shooter = new Shooter(tobj);
@@ -133,31 +132,26 @@ void addTuioObject(TuioObject tobj) {
   }
 }
 
-// called when an object is removed from the scene
 void removeTuioObject(TuioObject tobj) {
   println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
   ripple(tobj);
 }
 
-// called when an object is moved
 void updateTuioObject (TuioObject tobj) {
   println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
           +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
   if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
 }
 
-// called when a cursor is added to the scene
 void addTuioCursor(TuioCursor tcur) {
   println("add cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY());
 }
 
-// called when a cursor is moved
 void updateTuioCursor (TuioCursor tcur) {
   println("update cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+ ") " +tcur.getX()+" "+tcur.getY()
           +" "+tcur.getMotionSpeed()+" "+tcur.getMotionAccel());
 }
 
-// called when a cursor is removed from the scene
 void removeTuioCursor(TuioCursor tcur) {
   println("remove cursor "+tcur.getCursorID()+" ("+tcur.getSessionID()+")");
 }
@@ -166,19 +160,6 @@ void removeTuioCursor(TuioCursor tcur) {
 // representing the end of an image frame
 void refresh(TuioTime bundleTime) { 
   redraw();
-}
-
-void ripple(TuioObject tobj) {
-  stroke(0);
-  pushMatrix();
-  translate(tobj.getScreenX(width),tobj.getScreenY(height));
-  noFill();
-  ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
-  popMatrix();
-  ArrayList alreadyIntersected = new ArrayList();
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
-  //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
-  //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
 
 /*************************
@@ -235,6 +216,18 @@ float getNote(int id)
   return note;
 }
 
+void ripple(TuioObject tobj) {
+  stroke(0);
+  pushMatrix();
+  translate(tobj.getScreenX(width),tobj.getScreenY(height));
+  noFill();
+  ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
+  popMatrix();
+  ArrayList alreadyIntersected = new ArrayList();
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
+  //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
+  //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
+}
 
 /****************************************
  class Bubble
