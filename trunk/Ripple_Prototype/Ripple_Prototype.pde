@@ -20,6 +20,7 @@ float object_size = 60;
 float table_size = 760;
 float scale_factor = 1;
 PFont font;
+PImage bg;
 
 Shooter shooter = null;
 ArrayList bubbles;
@@ -33,10 +34,12 @@ int count;
 
 void setup()
 {
+  bg = loadImage("grass.jpg");
   //size(screen.width,screen.height);
   size(screen.width, screen.height);
+ //println(screen.width + "," + screen.height);
   noStroke();
-  fill(0);
+  //fill(0);
   
   loop();
   frameRate(30);
@@ -58,7 +61,7 @@ void setup()
 
 void draw()
 {
-  background(136, 194, 13);
+  background(bg);
   drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
@@ -287,24 +290,14 @@ class Shooter{
   float angle;
   
   Shooter(TuioObject clear_block){
-<<<<<<< .mine
      x = clear_block.getX()*width;
      y = clear_block.getY()*height;
-=======
-     x = clear_block.getX();
-     y = clear_block.getY();
->>>>>>> .r29
      angle = clear_block.getAngle();
   } 
   
   void move(float new_x, float new_y){
-<<<<<<< .mine
     x = new_x*width;
     y = new_y*height;
-=======
-    x = new_x;
-    y = new_y;
->>>>>>> .r29
   }
   
   void set_angle(float tag_angle){
