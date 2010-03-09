@@ -6,7 +6,7 @@ TuioProcessing tuioClient;
 
 static final int SHOOTER_ID = 0;
 static final int BUBBLE_DIAM = 16;
-static final int NUM_NOTES = 7;
+static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
 
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
@@ -183,37 +183,11 @@ void playNote(int[] id){
   curr_sc = (curr_sc + 1)%NUM_SC;
 }
 
+
 float getNote(int id)
 {
-  float note;
-  id = id%NUM_NOTES;
-  switch (id){
-    case 0:
-      note = 60; // 'C'
-      break;
-    case 1:
-      note = 62; // 'D'
-      break;
-    case 2:
-      note = 64; // 'E'
-      break;
-    case 3:
-      note = 65; // 'F'
-      break;
-    case 4:
-      note = 67; // 'G'
-      break;
-    case 5:
-      note = 69; // 'A'
-      break;
-    case 6:
-      note = 71; // 'B'
-      break; 
-    default:
-      note = 60; // just return middle C
-      break;
-  }
-  return note;
+  id = id%NUM_NOTES; //48 is low C, 60 is mid C, 72 is high C 
+  return id + 48;
 }
 
 void ripple(TuioObject tobj) {
