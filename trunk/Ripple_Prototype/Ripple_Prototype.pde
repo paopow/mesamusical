@@ -8,8 +8,6 @@ static final int SHOOTER_ID = 0;
 static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
-static final int WINDOW_WIDTH = 640;
-static final int WINDOW_HEIGHT = 480;
 
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
 SCScore score = new SCScore(); //may not need this
@@ -36,7 +34,8 @@ int count;
 void setup()
 {
   //size(screen.width,screen.height);
-  size(WINDOW_WIDTH,WINDOW_HEIGHT);
+  //size(640,480);
+  size(screen.width, screen.height);
   noStroke();
   fill(0);
   
@@ -60,7 +59,8 @@ void setup()
 
 void draw()
 {
-  background(255);
+  background(136, 194, 13);
+  drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
@@ -77,6 +77,17 @@ void draw()
   drawBubbles();
 
 }
+
+void drawCircle()
+{
+   float radius= 0.9*min(screen.width/2,screen.height/2);
+   stroke(70, 173, 237);
+   fill(70, 173, 237);
+   ellipseMode(CENTER);
+
+   ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
+   
+} 
 
 void drawReactTags(){
   Vector tuioObjectList = tuioClient.getTuioObjects();
@@ -299,14 +310,14 @@ class Shooter{
   float angle;
   
   Shooter(TuioObject clear_block){
-     x = clear_block.getX()*WINDOW_WIDTH;
-     y = clear_block.getY()*WINDOW_HEIGHT;
+     x = clear_block.getX();
+     y = clear_block.getY();
      angle = clear_block.getAngle();
   } 
   
   void move(float new_x, float new_y){
-    x = new_x*WINDOW_WIDTH;
-    y = new_y*WINDOW_HEIGHT;
+    x = new_x;
+    y = new_y;
   }
   
   void set_angle(float tag_angle){
@@ -315,9 +326,7 @@ class Shooter{
   
   void display(){
     //draw the shooter => what should it be?
-    println("Turtle at " + x + " " + y);
     drawTurtle(x,y,angle);
-    //obj_size = object_size*scale_factor; 
   }
   
   void shootBubble(){
