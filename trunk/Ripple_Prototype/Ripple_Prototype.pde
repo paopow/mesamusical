@@ -21,7 +21,6 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 PImage bg;
-PImage stone;
 
 Shooter shooter = null;
 ArrayList bubbles;
@@ -32,7 +31,7 @@ final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
 final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
 int count; 
-
+int[] rockList = new int[36];
 
 void setup()
 {
@@ -59,7 +58,19 @@ void setup()
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
-  stone = loadImage("stone1.gif");
+  rippleCounters = new HashMap();
+  
+  //*****************************IMPLEMENT
+  initRockList();
+  //******************************ME
+}
+
+//This will init an array of rock objects, indexed by their id numbers, rockList.
+void initRockList() {
+  int[] tempArr = new int[3];
+  tempArr[0] = 1; tempArr[1] = 2; tempArr[2] = 3;
+  rock temp = new rock(0, tempArr);
+  rockList[0] = temp;
 }
 
 void draw()
@@ -113,11 +124,10 @@ void drawReactTags(){
        pushMatrix();
        translate(tobj.getScreenX(width),tobj.getScreenY(height));
        rotate(tobj.getAngle());
-       //rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
-       image(stone,-obj_size/2,-obj_size/2,1.4*obj_size,1.4*obj_size);
+       rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
        popMatrix();
        fill(255);
-       //text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+       text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
      }
    }
 }
@@ -164,8 +174,9 @@ void addTuioObject(TuioObject tobj) {
     shooter = new Shooter(tobj);
      //add shooter 
   }else{
-    //add a stone 
-    ripple(tobj);
+    //add a stone
+    
+    ripple(tobj); 
   }
 }
 
@@ -245,9 +256,6 @@ void ripple(TuioObject tobj) {
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
   ArrayList alreadyIntersected = new ArrayList();
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), tobj.getSymbolID()));
-  //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
-  //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
+    
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
 }
-
-
