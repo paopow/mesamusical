@@ -169,17 +169,11 @@ boolean isCrossRadar(TuioObject tobj)
 }
 
 float getTransformedX(TuioObject tobj) {
-  float x = tobj.getY() * screen.width;
-  if(x < 650) x = x + ((650-x)/4);
-  else x = x - ((x-650)/2);
-  x = x +50;
-  return x;
+  return tobj.getY() * screen.height;
 }
 
 float getTransformedY(TuioObject tobj) {
-  float y = screen.height - (tobj.getX() * screen.height);
-  if(getTransformedX(tobj) > 500 && y < 450) y = y - 100;
-  return y;
+  return  tobj.getX() * screen.width;
 }
 
 // called when an object is added to the scene
