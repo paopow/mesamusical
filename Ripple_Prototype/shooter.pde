@@ -6,12 +6,13 @@ class Shooter{
   float y;
   int tempo_ctrl; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
   float angle;
-  
-  Shooter(TuioObject clear_block){
+  int turtle_no;
+  Shooter(TuioObject clear_block, int turtle_id ){
      x = clear_block.getX()*width;
      y = clear_block.getY()*height;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
+     turtle_no = turtle_id;
   } 
   
   void move(float new_x, float new_y){
@@ -25,7 +26,7 @@ class Shooter{
   
   void display(){
     //draw the shooter => what should it be?
-    drawTurtle(x,y,angle);
+    drawTurtle(x,y,angle,turtle_no);
   }
   
   void shootBubble(){
@@ -35,9 +36,14 @@ class Shooter{
 }
 
 
-void drawTurtle(float x, float y, float angle){
-  stroke(66,87,166);  
-  fill(66,87,166); 
+void drawTurtle(float x, float y, float angle, int turtle_id){
+  if(turtle_id == 1){
+    stroke(66,87,166);  
+    fill(66,87,166); 
+  }else if(turtle_id ==2){
+    stroke(157,57,166);
+    fill(157,57,166);
+  }
   float d = 1.5*object_size*sqrt(2);
   //PAOTODO change the color of the code later
   //PAOTODO: Draw the legs + animation for the turtle!
