@@ -21,6 +21,7 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 PImage bg;
+PImage stone;
 
 Shooter shooter = null;
 ArrayList bubbles;
@@ -31,6 +32,7 @@ final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
 final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
 int count; 
+
 
 void setup()
 {
@@ -57,6 +59,7 @@ void setup()
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
+  stone = loadImage("stone1.gif");
 }
 
 void draw()
@@ -110,10 +113,11 @@ void drawReactTags(){
        pushMatrix();
        translate(tobj.getScreenX(width),tobj.getScreenY(height));
        rotate(tobj.getAngle());
-       rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
+       //rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
+       image(stone,-obj_size/2,-obj_size/2,1.4*obj_size,1.4*obj_size);
        popMatrix();
        fill(255);
-       text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+       //text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
      }
    }
 }
