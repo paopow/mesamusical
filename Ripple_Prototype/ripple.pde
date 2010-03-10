@@ -2,6 +2,11 @@
 /****************************
  class Ripple
  ****************************/
+ 
+final int MAX_RADIUS = 200;
+final int RIPPLE_GROWTH_RATE = 2;
+final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
+
 class Ripple {
   float radius;
   float x;
@@ -9,6 +14,7 @@ class Ripple {
   int id; //id of the block it came from
   int noteID; //id number of the note to play
   boolean activated;
+  int glow_counter;
   
   Ripple(float rad, float xPos, float yPos, int idTag, int note) {
     radius = rad;
@@ -17,13 +23,16 @@ class Ripple {
     id = idTag;
     noteID = note;
     activated = true;
+    glow_counter = 3;
   }
   
   boolean update() {
-    if (this.activated == false) return true;
+    if (this.activated == false){
+      if(glow_counter == 0) return true;
+      glow_counter--;
+      return false;
+    }
     radius += RIPPLE_GROWTH_RATE;
-    //x += RIPPLE_GROWTH_RATE/2;
-    //y += RIPPLE_GROWTH_RATE/2;
     for (int i = 0; i < rippleList.size(); i++) {
       Ripple testRipple = (Ripple) rippleList.get(i);
       
@@ -38,7 +47,7 @@ class Ripple {
            thisInt[1] = testRipple.id;
            playNote(thisInt);
            testRipple.activated = false;
-           return true; 
+           this.activated = false;
         }
       }
     }
