@@ -300,7 +300,7 @@ void ripple(TuioObject tobj) {
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
   ArrayList alreadyIntersected = new ArrayList();
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
   //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
   //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
