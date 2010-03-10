@@ -22,8 +22,8 @@ class Ripple {
   boolean update() {
     if (this.activated == false) return true;
     radius += RIPPLE_GROWTH_RATE;
-    x += RIPPLE_GROWTH_RATE/2;
-    y += RIPPLE_GROWTH_RATE/2;
+    //x += RIPPLE_GROWTH_RATE/2;
+    //y += RIPPLE_GROWTH_RATE/2;
     for (int i = 0; i < rippleList.size(); i++) {
       Ripple testRipple = (Ripple) rippleList.get(i);
       
@@ -33,11 +33,9 @@ class Ripple {
         PVector v = new PVector(xCoord, yCoord);
       
         if (testRipple.radius + this.radius > v.mag()) { 
-           int[] thisInt = new int[1];
+           int[] thisInt = new int[2];
            thisInt[0] = this.id;
-           playNote(thisInt);
-          
-           thisInt[0] = testRipple.id;
+           thisInt[1] = testRipple.id;
            playNote(thisInt);
            testRipple.activated = false;
            return true; 
