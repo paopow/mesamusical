@@ -8,8 +8,8 @@ class Shooter{
   float angle;
   
   Shooter(TuioObject clear_block){
-     x = clear_block.getX()*WIDTH;
-     y = clear_block.getY()*HEIGHT;
+     x = clear_block.getX()*width;
+     y = clear_block.getY()*height;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
   } 
@@ -29,16 +29,16 @@ class Shooter{
   }
   
   void shootBubble(){
-    bubbles.add(new Bubble(x + (4*object_size/3)*cos(angle)/2,y + (4*object_size/3)*sin(angle)/2,angle));
+    bubbles.add(new Bubble(x + (4*object_size/2)*cos(angle)/2,y + (4*object_size/2)*sin(angle)/2,angle));
   }
   
 }
 
 
 void drawTurtle(float x, float y, float angle){
-  stroke(120);  
-  fill(120); 
-  float d = object_size*sqrt(2);
+  stroke(66,87,166);  
+  fill(66,87,166); 
+  float d = 1.5*object_size*sqrt(2);
   //PAOTODO change the color of the code later
   //PAOTODO: Draw the legs + animation for the turtle!
   ellipseMode(CENTER);
