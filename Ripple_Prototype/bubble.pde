@@ -21,7 +21,7 @@ class Bubble {
   void update() {
 
     // Our algorithm for calculating acceleration:
-    PVector blackHole = new PVector(screen.width/2, screen.height/2);
+    PVector blackHole = new PVector(WIDTH/2, HEIGHT/2);
    // PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
     //dir.normalize();     // Normalize
     //dir.mult(0.5);       // Scale 
@@ -40,7 +40,7 @@ class Bubble {
   }
   
   boolean isOffScreen(){
-     return ((location.x > width)||(location.x < 0)||(location.y >height) ||(location.y<0));
+     return ((location.x > WIDTH)||(location.x < 0)||(location.y >HEIGHT) ||(location.y<0));
   }
 }
 

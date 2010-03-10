@@ -8,8 +8,8 @@ class Shooter{
   float angle;
   
   Shooter(TuioObject clear_block){
-     x = clear_block.getX()*width;
-     y = clear_block.getY()*height;
+     x = clear_block.getX()*WIDTH;
+     y = clear_block.getY()*HEIGHT;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
   } 
