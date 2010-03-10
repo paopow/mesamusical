@@ -29,7 +29,7 @@ class Shooter{
   }
   
   void shootBubble(){
-      bubbles.add(new Bubble(x,y,angle));
+    bubbles.add(new Bubble(x + object_size*cos(angle)/2,y + object_size*sin(angle)/2,angle));
   }
   
 }
@@ -44,7 +44,7 @@ void drawTurtle(float x, float y, float angle){
   pushMatrix();
     translate(x,y);
     rotate(angle);
-    ellipse(object_size/2, 0, object_size/3, object_size/3);
-    ellipse(0,0,object_size, object_size);
+    ellipse(object_size*sqrt(2)/2, 0, object_size*sqrt(2)/3, object_size*sqrt(2)/3);
+    ellipse(0,0,object_size*sqrt(2), object_size*sqrt(2));
   popMatrix();  
 }

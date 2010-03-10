@@ -69,20 +69,23 @@ void draw()
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
   
-   //-------dump test code here
-     
-  if(shooter != null){
-    shooter.display();
-    if(frameCount%shooter.tempo_ctrl == 0){
-       shooter.shootBubble();
-    }
-  }
-   //------------------------
+  shooterMach();   
+
   
   drawReactTags();
   drawRipples();
   drawBubbles();
 
+}
+
+void shooterMach()
+{
+    if(shooter != null){
+       shooter.display();
+      if(frameCount%shooter.tempo_ctrl == 0){
+         shooter.shootBubble();
+      }
+    }
 }
 
 void drawCircle()
@@ -164,19 +167,21 @@ void addTuioObject(TuioObject tobj) {
 void removeTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
    shooter = null; 
+  }else{
+   ripple(tobj); 
   }
   //println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
-  ripple(tobj);
 }
 
 void updateTuioObject (TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
     shooter.move(tobj.getX(),tobj.getY());
     shooter.set_angle(tobj.getAngle());
+  }else{
+     if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
   }
   //println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
     //      +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
-  if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
 }
 
 void addTuioCursor(TuioCursor tcur) {
