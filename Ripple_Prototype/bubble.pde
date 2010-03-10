@@ -19,15 +19,6 @@ class Bubble {
   }
 
   void update() {
-
-    // Our algorithm for calculating acceleration:
-    PVector blackHole = new PVector(WIDTH/2, HEIGHT/2);
-   // PVector dir = PVector.sub(blackHole,location);  // Find vector pointing towards mouse
-    //dir.normalize();     // Normalize
-    //dir.mult(0.5);       // Scale 
-    //acceleration = dir;  // Set to acceleration
-
-    // Motion 101!  Velocity changes by acceleration.  Location changes by velocity.
     velocity.add(acceleration);
     velocity.limit(topspeed);
     location.add(velocity);

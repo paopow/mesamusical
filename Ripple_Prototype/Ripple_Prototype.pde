@@ -136,9 +136,8 @@ void draw()
   
   shooterMach();   
 
-  
-  drawReactTags();
   drawRipples();
+  drawReactTags();
   drawBubbles();
 
 }
@@ -187,19 +186,17 @@ void drawRipples(){
      Ripple temp = (Ripple) rippleList.get(i);
      
      stroke(30, 94, 167);
-     pushMatrix();
-     translate(temp.x, temp.y);
      noFill();
-     ellipse(-temp.radius/2, -temp.radius/2, temp.radius, temp.radius);
+     ellipseMode(CENTER);
+     ellipse(temp.x,temp.y, temp.radius, temp.radius);
      
      if (temp.update()) {
        rippleList.remove(i);
+       
        //println("Removed ripple");
      } else {
        //println("Kept ripple. Radius:" + temp.radius);
-     }
-     
-     popMatrix();  
+     } 
    }  
 }
 
@@ -312,7 +309,7 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(WIDTH) + obj_size/2, tobj.getScreenY(WIDTH) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
+  rippleList.add(new Ripple(obj_size/2, tobj.getX()*width, tobj.getY()*height, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
 
 }
 
