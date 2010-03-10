@@ -260,9 +260,9 @@ void removeTuioObject(TuioObject tobj) {
   }
   if(tobj.getSymbolID() == SHOOTER_ID){
    shooter = null; 
-  }else{
-   ripple(tobj); 
-  }
+  }//else{
+  // ripple(tobj); 
+  //}
   //println("remove object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+")");
 }
 
