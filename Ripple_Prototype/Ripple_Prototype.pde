@@ -4,7 +4,7 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
-static final int SHOOTER_ID = 15; //probably change back to 36 later
+static final int SHOOTER_ID = 35;
 static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
@@ -208,7 +208,15 @@ void drawBubbles(){
     Bubble bubble = (Bubble) bubbles.get(i);
     bubble.update();
     bubble.display(); 
-    if(bubble.isOffScreen()){
+    int id = bubble.hitRockID();
+    if(id != -1){
+      int[] tag_id = new int[1];
+      tag_id[0] = id;
+      playNote(tag_id);
+      //DAVIDTODO: updatedisplay here
+      bubbles.remove(i);
+      i--;
+    }else if(bubble.isOffScreen()){
       bubbles.remove(i);
       i--;
     }
