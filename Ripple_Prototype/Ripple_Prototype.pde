@@ -73,6 +73,9 @@ void draw()
      
   if(shooter != null){
     shooter.display();
+    if(frameCount%shooter.tempo_ctrl == 0){
+       shooter.shootBubble();
+    }
   }
    //------------------------
   
@@ -151,7 +154,6 @@ void drawBubbles(){
 void addTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
     shooter = new Shooter(tobj);
-    shooter.shootBubble();
      //add shooter 
   }else{
     //add a stone 
