@@ -70,7 +70,7 @@ void setup()
 void initRockList() {
   
   int index = 0;
-  int[] noteList = {12, 16, 19,
+ int[] noteList = {12, 16, 19,
                     14, 18, 21,
                     16, 20, 23,
                     17, 21, 24,
@@ -78,34 +78,34 @@ void initRockList() {
                     21, 25, 28,
                     23, 27, 30,
                     24, 28, 31,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0};
+                    16, 19, 24,
+                    14, 19, 23,
+                    14, 19, 20,
+                    12, 17, 21,
+                    17, 19, 23,
+                    14, 16, 17,
+                    12, 24, 36,
+                    12, 12, 19,
+                    16, 20, 16,
+                    24, 19, 24,
+                    16, 35, 20,
+                    16, 23, 32,
+                    14, 15, 16,
+                    21, 22, 23,
+                    23, 20, 23,
+                    14, 15, 29,
+                    17, 22, 24,
+                    21, 24, 26,
+                    21, 22, 36,
+                    23, 14, 19,
+                    21, 30, 26,
+                    16, 31, 36,
+                    24, 21, 12,
+                    19, 36, 16,
+                    17, 22, 20,
+                    19, 16, 12,
+                    14, 17, 21,
+                    12, 15, 19};
   
   for(int i = 0; i < 36; i++) {
     int[] tempArr = new int[3];
@@ -304,10 +304,8 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  ArrayList alreadyIntersected = new ArrayList();
   rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(WIDTH) + obj_size/2, tobj.getScreenY(WIDTH) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
-  //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
-  //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
+
 }
 
 
