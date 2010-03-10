@@ -38,7 +38,7 @@ class Bubble {
     Vector tuioObjectList = tuioClient.getTuioObjects();
     for (int i=0;i<tuioObjectList.size();i++) {
        TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-       if(tobj.getSymbolID() != SHOOTER_ID){
+       if((tobj.getSymbolID() != SHOOTER_ID)&&(tobj.getSymbolID() != SHOOTER_ID2)){
          println(location.x + ":" + location.y + ":" + tobj.getX() + ":" + tobj.getY());
          println(1.1*obj_size);
          if((location.x> tobj.getX()*width-1.1*obj_size)

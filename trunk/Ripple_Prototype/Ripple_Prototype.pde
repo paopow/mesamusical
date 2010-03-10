@@ -5,6 +5,7 @@ import TUIO.*;
 TuioProcessing tuioClient;
 
 static final int SHOOTER_ID = 35;
+static final int SHOOTER_ID2 = 34;
 static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
@@ -26,6 +27,7 @@ PImage bg;
 PImage rock;
 
 Shooter shooter = null;
+Shooter shooter2 = null;
 ArrayList bubbles;
 
 ArrayList rippleList;
@@ -148,6 +150,12 @@ void shooterMach()
          shooter.shootBubble();
       }
     }
+    if(shooter2 != null){
+       shooter2.display();
+      if(frameCount%shooter2.tempo_ctrl == 0){
+         shooter2.shootBubble();
+      }
+    }
 }
 
 void drawCircle()
@@ -165,7 +173,7 @@ void drawReactTags(){
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-     if(tobj.getSymbolID()!=SHOOTER_ID){ 
+     if((tobj.getSymbolID()!=SHOOTER_ID)&&(tobj.getSymbolID()!=SHOOTER_ID2)){ 
        stroke(167, 148, 30);
        fill(167, 148, 30);
        pushMatrix();
@@ -231,15 +239,25 @@ void drawBubbles(){
 
 void addTuioObject(TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
-    shooter = new Shooter(tobj);
+    shooter = new Shooter(tobj,1);
      //add shooter 
+  }else if(tobj.getSymbolID() == SHOOTER_ID2){
+      shooter2 = new Shooter(tobj,2);
   }else{
     //add a stone 
     ripple(tobj);
+    
+    //play the note when added
+    int[] thisInt = new int[2];
+    thisInt[0] = tobj.getSymbolID();
+    playNote(thisInt);
   }
 }
 
 void removeTuioObject(TuioObject tobj) {
+   if(tobj.getSymbolID() == SHOOTER_ID2){
+   shooter2 = null; 
+  }
   if(tobj.getSymbolID() == SHOOTER_ID){
    shooter = null; 
   }else{
@@ -252,6 +270,9 @@ void updateTuioObject (TuioObject tobj) {
   if(tobj.getSymbolID() == SHOOTER_ID){
     shooter.move(tobj.getX(),tobj.getY());
     shooter.set_angle(tobj.getAngle());
+  }else if(tobj.getSymbolID() == SHOOTER_ID2){
+    shooter2.move(tobj.getX(),tobj.getY());
+    shooter2.set_angle(tobj.getAngle());
   }else{
      if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
   }
@@ -295,7 +316,8 @@ void playNote(int[] id){
   }
   //float note = getNote(id[0]);
   //sc_array[curr_sc].playNote(note, 100, 1.0);
-  sc_array[curr_sc].playChord(chord,100,1.0);
+  sc_array[curr_sc].channel = curr_sc;
+  sc_array[curr_sc].playChord(chord,100,2.0);
   curr_sc = (curr_sc + 1)%NUM_SC;
 }
 
@@ -314,7 +336,8 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  rippleList.add(new Ripple(1.1*obj_size, tobj.getX()*width, tobj.getY()*height, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
+  Ripple new_ripple = new Ripple(1.1*obj_size, tobj.getX()*width, tobj.getY()*height, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote());
+  rippleList.add(new_ripple);
 
 }
 
