@@ -11,7 +11,7 @@ class Shooter{
      x = clear_block.getX()*width;
      y = clear_block.getY()*height;
      angle = clear_block.getAngle();  
-     tempo_ctrl = 20;
+     tempo_ctrl = 15;
   } 
   
   void move(float new_x, float new_y){
@@ -29,7 +29,7 @@ class Shooter{
   }
   
   void shootBubble(){
-    bubbles.add(new Bubble(x + object_size*cos(angle)/2,y + object_size*sin(angle)/2,angle));
+    bubbles.add(new Bubble(x + (4*object_size/3)*cos(angle)/2,y + (4*object_size/3)*sin(angle)/2,angle));
   }
   
 }
@@ -38,13 +38,35 @@ class Shooter{
 void drawTurtle(float x, float y, float angle){
   stroke(120);  
   fill(120); 
+  float d = object_size*sqrt(2);
   //PAOTODO change the color of the code later
   //PAOTODO: Draw the legs + animation for the turtle!
   ellipseMode(CENTER);
   pushMatrix();
     translate(x,y);
     rotate(angle);
-    ellipse(object_size*sqrt(2)/2, 0, object_size*sqrt(2)/3, object_size*sqrt(2)/3);
-    ellipse(0,0,object_size*sqrt(2), object_size*sqrt(2));
+    ellipse(d/2, 0, d/3, d/3); //head
+    ellipse(0,0,d,d); //body
+    
+    //legs
+    pushMatrix();
+      rotate(-PI/2);
+      arc(0.15*d,0.10*d,d,0.6*d,0, PI);
+    popMatrix();
+    pushMatrix();
+      rotate(-PI/2);
+      arc(-0.15*d,0.1*d,d,0.6*d,0,PI);
+    popMatrix();
+    pushMatrix();
+      rotate(-PI/3);
+      arc(-0.15*d,-0.25*d,d,0.6*d,0,PI);
+    popMatrix();
+    pushMatrix();
+      rotate(-2*PI/3);
+      arc(0.15*d,-0.25*d,d,0.6*d,0,PI);
+    popMatrix();
+    //arc(d/4,-d/4,,,0, PI);
+    //arc(-d/4,d/4,,,0, PI);
+    //arc(-d/4,-d/4,,,0, PI);
   popMatrix();  
 }

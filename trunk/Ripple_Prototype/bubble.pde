@@ -11,12 +11,11 @@ class Bubble {
   
   Bubble(float x,float y,float angle) { //PAOTODO: Change this later -> need velocity
     location = new PVector(x,y);
-    velocity = new PVector(0,0);
+    velocity = new PVector(5*cos(angle),5*sin(angle));
     acceleration = new PVector(cos(angle),sin(angle));
     acceleration.normalize();
-    acceleration.mult(2);
-    println(acceleration.x+" "+acceleration.y);
-    topspeed = 4;
+    acceleration.mult(0.5);
+    topspeed = 8;
   }
 
   void update() {

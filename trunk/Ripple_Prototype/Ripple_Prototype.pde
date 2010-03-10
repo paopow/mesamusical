@@ -69,12 +69,13 @@ void draw()
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
   
+  drawBubbles();
   shooterMach();   
 
   
   drawReactTags();
   drawRipples();
-  drawBubbles();
+ 
 
 }
 
