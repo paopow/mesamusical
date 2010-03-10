@@ -20,7 +20,7 @@ class Ripple {
   }
   
   boolean update() {
-    if (this.activated = false) return true;
+    if (this.activated == false) return true;
     radius += RIPPLE_GROWTH_RATE;
     x += RIPPLE_GROWTH_RATE/2;
     y += RIPPLE_GROWTH_RATE/2;
@@ -28,8 +28,8 @@ class Ripple {
       Ripple testRipple = (Ripple) rippleList.get(i);
       
       if (this.id != testRipple.id) {
-        float xCoord = abs(x - testRipple.x);
-        float yCoord = abs(y - testRipple.y);
+        float xCoord = abs(this.x - testRipple.x);
+        float yCoord = abs(this.y - testRipple.y);
         PVector v = new PVector(xCoord, yCoord);
       
         if (testRipple.radius + this.radius > v.mag()) { 
