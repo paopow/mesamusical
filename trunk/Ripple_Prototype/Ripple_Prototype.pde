@@ -4,10 +4,12 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
-static final int SHOOTER_ID = 35;
+static final int SHOOTER_ID = 15; //probably change back to 36 later
 static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
+static final int WIDTH = 1200;
+static final int HEIGHT = 800;
 
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
 SCScore score = new SCScore(); //may not need this
@@ -21,6 +23,7 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 PImage bg;
+PImage rock;
 
 Shooter shooter = null;
 ArrayList bubbles;
@@ -33,11 +36,13 @@ final int ONE_OVER_RIPPLE_FREQUENCY = 10;
 int count; 
 rock[] rockList = new rock[36];
 
+
 void setup()
 {
+  rock = loadImage("stone1.gif");
   bg = loadImage("grass.jpg");
   //size(screen.width,screen.height);
-  size(screen.width, screen.height);
+  size(WIDTH, HEIGHT);//, screen.height);
  //println(screen.width + "," + screen.height);
   noStroke();
   //fill(0);
@@ -150,12 +155,12 @@ void shooterMach()
 
 void drawCircle()
 {
-   float radius= 0.9*min(screen.width/2,screen.height/2);
+   float radius= 0.9*min(WIDTH/2,HEIGHT/2);
    stroke(30, 167, 148);
    fill(30, 167, 148);
    ellipseMode(CENTER);
 
-   ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
+   ellipse(WIDTH/2, HEIGHT/2,2*radius,2*radius); 
    
 } 
 
@@ -167,12 +172,12 @@ void drawReactTags(){
        stroke(167, 148, 30);
        fill(167, 148, 30);
        pushMatrix();
-       translate(tobj.getScreenX(width),tobj.getScreenY(height));
+       translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
        rotate(tobj.getAngle());
-       rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
+       image(rock, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
        popMatrix();
        fill(167, 57, 30);
-       text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
+       text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
      }
    }
 }
@@ -295,11 +300,12 @@ float getNote(int id)
 void ripple(TuioObject tobj) {
   stroke(0);
   pushMatrix();
-  translate(tobj.getScreenX(width),tobj.getScreenY(height));
+  translate(tobj.getScreenX(WIDTH),tobj.getScreenY(HEIGHT));
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
   rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(WIDTH) + obj_size/2, tobj.getScreenY(WIDTH) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
+
 }
 
 
