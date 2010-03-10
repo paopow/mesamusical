@@ -4,14 +4,14 @@
 class Shooter{
   float x;
   float y;
-  double tempo; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
+  int tempo_ctrl; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
   float angle;
   
   Shooter(TuioObject clear_block){
      x = clear_block.getX()*width;
      y = clear_block.getY()*height;
-     angle = clear_block.getAngle();
-     println("angle " + angle);
+     angle = clear_block.getAngle();  
+     tempo_ctrl = 20;
   } 
   
   void move(float new_x, float new_y){
@@ -21,7 +21,6 @@ class Shooter{
   
   void set_angle(float tag_angle){
      angle = tag_angle;
-     shootBubble();
   }
   
   void display(){
@@ -30,7 +29,6 @@ class Shooter{
   }
   
   void shootBubble(){
-      println("Bubble " + angle);
       bubbles.add(new Bubble(x,y,angle));
   }
   
