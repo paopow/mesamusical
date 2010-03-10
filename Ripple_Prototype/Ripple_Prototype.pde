@@ -6,7 +6,6 @@ TuioProcessing tuioClient;
 
 static final int SHOOTER_ID = 35;
 static final int SHOOTER_ID2 = 34;
-static final int BUBBLE_DIAM = 16;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
 static final int WIDTH = 1200;
