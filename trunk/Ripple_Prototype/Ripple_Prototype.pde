@@ -41,6 +41,7 @@ void setup()
 {
   //size(screen.width,screen.height);
   size(WIDTH, HEIGHT);//, screen.height);
+  println(WIDTH + "," + HEIGHT);
  //println(screen.width + "," + screen.height);
   noStroke();
   //fill(0);
@@ -132,9 +133,8 @@ void initRockList() {
 
 void draw()
 {
-
-  //background(bg);
   background(94, 167, 30);
+  image(bg, 0, 0, 1200, 800);
   drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
