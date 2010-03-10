@@ -24,6 +24,7 @@ float scale_factor = 1;
 PFont font;
 PImage bg;
 PImage rock;
+PImage rockGlow;
 
 Shooter shooter = null;
 Shooter shooter2 = null;
@@ -38,8 +39,6 @@ rock[] rockList = new rock[36];
 
 void setup()
 {
-  rock = loadImage("stone1.gif");
-  bg = loadImage("grass.jpg");
   //size(screen.width,screen.height);
   size(WIDTH, HEIGHT);//, screen.height);
  //println(screen.width + "," + screen.height);
@@ -63,7 +62,15 @@ void setup()
   rippleList = new ArrayList();
   count = 0;
   initRockList();
+  loadImages();
 }
+
+void loadImages() {
+  rock = loadImage("stone1.gif");
+  rockGlow = loadImage("stoneglow.gif");
+  bg = loadImage("grass.jpg");
+}
+
 
 //This will init an array of rock objects, indexed by their id numbers, rockList.
 void initRockList() {
@@ -136,7 +143,7 @@ void draw()
   shooterMach();   
 
   drawRipples();
-  drawReactTags();
+  drawRocks();
   drawBubbles();
 
 }
@@ -168,7 +175,7 @@ void drawCircle()
    
 } 
 
-void drawReactTags(){
+void drawRocks(){
   Vector tuioObjectList = tuioClient.getTuioObjects();
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
@@ -184,6 +191,28 @@ void drawReactTags(){
        text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
      }
    }
+}
+
+//inefficient to loop through, but TUIOClient can only retrieve by SessID
+TuioObject getTObjForSymbolID(int symbolID) {
+  Vector tuioObjectList = tuioClient.getTuioObjects();
+  for (int i=0;i<tuioObjectList.size();i++) {
+    TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
+    if(tobj.getSymbolID() == symbolID)
+      return tobj;
+  }
+  return null;
+}
+
+void drawRockGlow(int symbolID) {
+  TuioObject tobj = getTObjForSymbolID(symbolID);
+  pushMatrix();
+  translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
+  rotate(tobj.getAngle());
+  image(rockGlow, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
+  popMatrix();
+  fill(167, 57, 30);
+  text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
 }
 
 void drawRipples(){  
@@ -222,7 +251,7 @@ void drawBubbles(){
       int[] tag_id = new int[1];
       tag_id[0] = id;
       playNote(tag_id);
-      //DAVIDTODO: updatedisplay here
+      drawRockGlow(id);
       bubbles.remove(i);
       i--;
     }else if(bubble.isOffScreen()){
