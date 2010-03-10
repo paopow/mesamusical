@@ -31,7 +31,6 @@ final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
 final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
 int count; 
-int[] rockList = new int[36];
 
 void setup()
 {
@@ -58,38 +57,24 @@ void setup()
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
-  rippleCounters = new HashMap();
-  
-  //*****************************IMPLEMENT
-  initRockList();
-  //******************************ME
-}
-
-//This will init an array of rock objects, indexed by their id numbers, rockList.
-void initRockList() {
-  int[] tempArr = new int[3];
-  tempArr[0] = 1; tempArr[1] = 2; tempArr[2] = 3;
-  rock temp = new rock(0, tempArr);
-  rockList[0] = temp;
 }
 
 void draw()
 {
 
   //background(bg);
-  background(136, 194, 13);
+  background(94, 167, 30);
   drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
   
-  drawBubbles();
   shooterMach();   
 
   
   drawReactTags();
   drawRipples();
- 
+  drawBubbles();
 
 }
 
@@ -106,8 +91,8 @@ void shooterMach()
 void drawCircle()
 {
    float radius= 0.9*min(screen.width/2,screen.height/2);
-   stroke(70, 173, 237);
-   fill(70, 173, 237);
+   stroke(30, 167, 148);
+   fill(30, 167, 148);
    ellipseMode(CENTER);
 
    ellipse(screen.width/2, screen.height/2,2*radius,2*radius); 
@@ -119,14 +104,14 @@ void drawReactTags(){
   for (int i=0;i<tuioObjectList.size();i++) {
      TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
      if(tobj.getSymbolID()!=SHOOTER_ID){ 
-       stroke(0);
-       fill(0);
+       stroke(167, 148, 30);
+       fill(167, 148, 30);
        pushMatrix();
        translate(tobj.getScreenX(width),tobj.getScreenY(height));
        rotate(tobj.getAngle());
        rect(-obj_size/2,-obj_size/2,obj_size,obj_size);
        popMatrix();
-       fill(255);
+       fill(167, 57, 30);
        text(""+tobj.getSymbolID(), tobj.getScreenX(width), tobj.getScreenY(height));
      }
    }
@@ -136,7 +121,7 @@ void drawRipples(){
    for (int i = rippleList.size() - 1; i >= 0; i--) {
      Ripple temp = (Ripple) rippleList.get(i);
      
-     stroke(0);
+     stroke(30, 94, 167);
      pushMatrix();
      translate(temp.x, temp.y);
      noFill();
@@ -174,9 +159,8 @@ void addTuioObject(TuioObject tobj) {
     shooter = new Shooter(tobj);
      //add shooter 
   }else{
-    //add a stone
-    
-    ripple(tobj); 
+    //add a stone 
+    ripple(tobj);
   }
 }
 
@@ -256,6 +240,9 @@ void ripple(TuioObject tobj) {
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
   ArrayList alreadyIntersected = new ArrayList();
-    
-  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
+  rippleList.add(new Ripple(obj_size/2, tobj.getScreenX(width) + obj_size/2, tobj.getScreenY(height) + obj_size/2, tobj.getSymbolID(), alreadyIntersected));
+  //rippleList.add(new Ripple(6, tobj.getScreenX(width),tobj.getScreenY(height)));
+  //rippleList.add(new Ripple(1, tobj.getScreenX(width),tobj.getScreenY(height)));
 }
+
+
