@@ -30,9 +30,7 @@ ArrayList bubbles;
 
 ArrayList rippleList;
 float obj_size;
-final int MAX_RADIUS = 250;
-final int RIPPLE_GROWTH_RATE = 2;
-final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
+
 int count; 
 rock[] rockList = new rock[36];
 
@@ -182,14 +180,20 @@ void drawReactTags(){
 }
 
 void drawRipples(){  
+  strokeWeight(2);
    for (int i = rippleList.size() - 1; i >= 0; i--) {
      Ripple temp = (Ripple) rippleList.get(i);
-     
-     stroke(30, 94, 167);
-     noFill();
-     ellipseMode(CENTER);
-     ellipse(temp.x,temp.y, temp.radius, temp.radius);
-     
+     if(temp.activated == true){
+       stroke(30, 94, 167);
+       noFill();
+       ellipseMode(CENTER);
+       ellipse(temp.x,temp.y, 2*temp.radius, 2*temp.radius);
+     }else{
+       stroke(166, 59, 59);
+       noFill();
+       ellipseMode(CENTER);
+       ellipse(temp.x,temp.y, 2*temp.radius, 2*temp.radius);
+     }
      if (temp.update()) {
        rippleList.remove(i);
        
@@ -198,6 +202,7 @@ void drawRipples(){
        //println("Kept ripple. Radius:" + temp.radius);
      } 
    }  
+   strokeWeight(1);
 }
 
 void drawBubbles(){
@@ -309,7 +314,7 @@ void ripple(TuioObject tobj) {
   noFill();
   ellipse(-obj_size/2,-obj_size/2,obj_size,obj_size);
   popMatrix();
-  rippleList.add(new Ripple(obj_size/2, tobj.getX()*width, tobj.getY()*height, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
+  rippleList.add(new Ripple(1.1*obj_size, tobj.getX()*width, tobj.getY()*height, tobj.getSymbolID(), rockList[tobj.getSymbolID()].getNote()));
 
 }
 
