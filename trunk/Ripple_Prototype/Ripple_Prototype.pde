@@ -31,6 +31,7 @@ final int MAX_RADIUS = 250;
 final int RIPPLE_GROWTH_RATE = 2;
 final int ONE_OVER_RIPPLE_FREQUENCY = 10; 
 int count; 
+rock[] rockList = new rock[36];
 
 void setup()
 {
@@ -57,6 +58,65 @@ void setup()
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
+  initRockList();
+}
+
+//This will init an array of rock objects, indexed by their id numbers, rockList.
+void initRockList() {
+  
+  int index = 0;
+  int[] noteList = {0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0};
+  
+  for(int i = 0; i < 36; i++) {
+    int[] tempArr = new int[3];
+    for (int j = 0; j < 3; j++) {
+      tempArr[j] = noteList[index++];
+    }
+    rock temp = new rock(tempArr);
+    rockList[i] = temp;
+  }
+  
+  /*
+  int[] tempArr = new int[3];
+  tempArr[0] = 1; tempArr[1] = 2; tempArr[2] = 3;
+  rock temp = new rock(tempArr);
+  rockList[0] = temp;
+  */
 }
 
 void draw()
