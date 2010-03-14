@@ -4,13 +4,13 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
-static final int SHOOTER_ID = 35;
-static final int SHOOTER_ID2 = 34;
+static final int SHOOTER_ID = 34;
+static final int SHOOTER_ID2 = 33;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
 static final int WIDTH = 1200;
 static final int HEIGHT = 800;
-
+static final int NUM_FROGS = 36;
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
 SCScore score = new SCScore(); //may not need this
 static int curr_sc = 0;
@@ -23,8 +23,9 @@ float table_size = 760;
 float scale_factor = 1;
 PFont font;
 PImage bg;
-PImage rock;
-PImage rockGlow;
+PImage lily;
+PImage frog;
+PImage duck;
 
 Shooter shooter = null;
 Shooter shooter2 = null;
@@ -34,7 +35,7 @@ ArrayList rippleList;
 float obj_size;
 
 int count; 
-rock[] rockList = new rock[36];
+Frog[] frogList = new Frog[NUM_FROGS];
 
 
 void setup()
@@ -62,21 +63,24 @@ void setup()
   tuioClient  = new TuioProcessing(this);
   rippleList = new ArrayList();
   count = 0;
-  initRockList();
+  initFrogList();
   loadImages();
 }
 
 void loadImages() {
-  rock = loadImage("stone1.gif");
-  rockGlow = loadImage("stoneglow.gif");
+  //rock = loadImage("stone1.gif");
+  lily = loadImage("lilypad.png");
   bg = loadImage("grass.jpg");
+  frog = loadImage("frog.png");
+  duck = loadImage("duck.gif");
 }
 
 
 //This will init an array of rock objects, indexed by their id numbers, rockList.
-void initRockList() {
+void initFrogList() {
   
   int index = 0;
+  /*
  int[] noteList = {12, 16, 19,
                     14, 18, 21,
                     16, 20, 23,
@@ -113,14 +117,10 @@ void initRockList() {
                     19, 16, 12,
                     14, 17, 21,
                     12, 15, 19};
-  
-  for(int i = 0; i < 36; i++) {
-    int[] tempArr = new int[3];
-    for (int j = 0; j < 3; j++) {
-      tempArr[j] = noteList[index++];
-    }
-    rock temp = new rock(tempArr);
-    rockList[i] = temp;
+  */
+  for(int i = 0; i < NUM_FROGS; i++) {
+    Frog temp = new Frog(i,0.0,0.0, 0.0);
+    frogList[i] = temp;
   }
   
   /*
@@ -135,15 +135,15 @@ void draw()
 {
   background(94, 167, 30);
   image(bg, 0, 0, 1200, 800);
-  drawCircle();
+  //drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
   
   shooterMach();   
 
-  drawRipples();
-  drawRocks();
+  //drawRipples();
+  drawFrogs();
   drawBubbles();
 
 }
@@ -164,33 +164,13 @@ void shooterMach()
     }
 }
 
-void drawCircle()
-{
-   float radius= 0.9*min(WIDTH/2,HEIGHT/2);
-   stroke(30, 167, 148);
-   fill(30, 167, 148);
-   ellipseMode(CENTER);
 
-   ellipse(WIDTH/2, HEIGHT/2,2*radius,2*radius); 
-   
-} 
-
-void drawRocks(){
-  Vector tuioObjectList = tuioClient.getTuioObjects();
-  for (int i=0;i<tuioObjectList.size();i++) {
-     TuioObject tobj = (TuioObject)tuioObjectList.elementAt(i);
-     if((tobj.getSymbolID()!=SHOOTER_ID)&&(tobj.getSymbolID()!=SHOOTER_ID2)){ 
-       stroke(167, 148, 30);
-       fill(167, 148, 30);
-       pushMatrix();
-       translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
-       rotate(tobj.getAngle());
-       image(rock, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
-       popMatrix();
-       fill(167, 57, 30);
-       text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
-     }
-   }
+void drawFrogs(){
+  for(int i=0; i<NUM_FROGS; i++) {
+    if(frogList[i].isOnScreen()) {
+      frogList[i].display();
+    }
+  }
 }
 
 //inefficient to loop through, but TUIOClient can only retrieve by SessID
@@ -204,17 +184,7 @@ TuioObject getTObjForSymbolID(int symbolID) {
   return null;
 }
 
-void drawRockGlow(int symbolID) {
-  TuioObject tobj = getTObjForSymbolID(symbolID);
-  pushMatrix();
-  translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
-  rotate(tobj.getAngle());
-  image(rockGlow, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
-  popMatrix();
-  fill(167, 57, 30);
-  text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
-}
-
+/*
 void drawRipples(){  
   strokeWeight(2);
    for (int i = rippleList.size() - 1; i >= 0; i--) {
@@ -240,7 +210,7 @@ void drawRipples(){
    }  
    strokeWeight(1);
 }
-
+*/
 void drawBubbles(){
   for (int i = 0; i < bubbles.size(); i++) {
     Bubble bubble = (Bubble) bubbles.get(i);
@@ -251,7 +221,7 @@ void drawBubbles(){
       int[] tag_id = new int[1];
       tag_id[0] = id;
       playNote(tag_id);
-      drawRockGlow(id);
+      //drawRockGlow(id);
       bubbles.remove(i);
       i--;
     }else if(bubble.isOffScreen()){
@@ -266,19 +236,19 @@ void drawBubbles(){
  *********************************/
 
 void addTuioObject(TuioObject tobj) {
-  if(tobj.getSymbolID() == SHOOTER_ID){
-    shooter = new Shooter(tobj,1);
-     //add shooter 
-  }else if(tobj.getSymbolID() == SHOOTER_ID2){
-      shooter2 = new Shooter(tobj,2);
-  }else{
-    //add a stone 
-    ripple(tobj);
-    
-    //play the note when added
-    int[] thisInt = new int[2];
-    thisInt[0] = tobj.getSymbolID();
-    playNote(thisInt);
+  int id = tobj.getSymbolID() % NUM_NOTES;
+  switch(id) {
+    case SHOOTER_ID:
+      shooter = new Shooter(tobj, 1); break;
+    case SHOOTER_ID2:
+      shooter2 = new Shooter(tobj, 2); break;
+    default: 
+      frogList[id].moveTo(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT), tobj.getAngle());
+      frogList[id].setOnScreen(true);
+      frogList[id].display();
+      int[] thisInt = new int[2];
+      thisInt[0] = id % NUM_NOTES; //xxx I THINK THIS WAS CAUSING CRASHES BEFORE... MOD IT to make sure
+      playNote(thisInt);
   }
 }
 
@@ -301,8 +271,6 @@ void updateTuioObject (TuioObject tobj) {
   }else if(tobj.getSymbolID() == SHOOTER_ID2){
     shooter2.move(tobj.getX(),tobj.getY());
     shooter2.set_angle(tobj.getAngle());
-  }else{
-     if (count++ % ONE_OVER_RIPPLE_FREQUENCY == 0) ripple(tobj);
   }
   //println("update object "+tobj.getSymbolID()+" ("+tobj.getSessionID()+") "+tobj.getX()+" "+tobj.getY()+" "+tobj.getAngle()
     //      +" "+tobj.getMotionSpeed()+" "+tobj.getRotationSpeed()+" "+tobj.getMotionAccel()+" "+tobj.getRotationAccel());
@@ -354,9 +322,9 @@ void playNote(int[] id){
 float getNote(int id)
 {
   id = id%NUM_NOTES; //48 is low C, 60 is mid C, 72 is high C 
-  return id + 48; 
+  return id + 60; 
 }
-
+/*
 void ripple(TuioObject tobj) {
   stroke(0);
   pushMatrix();
@@ -368,5 +336,5 @@ void ripple(TuioObject tobj) {
   rippleList.add(new_ripple);
 
 }
-
+*/
 

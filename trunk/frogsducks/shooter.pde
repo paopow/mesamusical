@@ -6,13 +6,16 @@ class Shooter{
   float y;
   int tempo_ctrl; //PAOTODO:how to control this => make spinning a single action? Tap-tap?
   float angle;
-  int turtle_no;
-  Shooter(TuioObject clear_block, int turtle_id ){
+  int duck_no;
+  PImage duckImage;
+  
+  Shooter(TuioObject clear_block, int duck_id ){
      x = clear_block.getX()*width;
      y = clear_block.getY()*height;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
-     turtle_no = turtle_id;
+     duck_no = duck_id;
+     duckImage = loadImage("duck.gif");
   } 
   
   void move(float new_x, float new_y){
@@ -26,7 +29,8 @@ class Shooter{
   
   void display(){
     //draw the shooter => what should it be?
-    drawTurtle(x,y,angle,turtle_no);
+    //drawTurtle(x,y,angle,turtle_no);
+    drawDuck(x, y, angle, duck_no);
   }
   
   void shootBubble(){
@@ -35,7 +39,15 @@ class Shooter{
   
 }
 
+void drawDuck(float x, float y, float angle, int duck_id) {
+    pushMatrix();
+    translate(x,y);
+    rotate(angle);
+    image(duck, 0, 0, object_size*3 , object_size*3);
+    popMatrix();
+}
 
+/*XXX keep for reference
 void drawTurtle(float x, float y, float angle, int turtle_id){
   if(turtle_id == 1){
     stroke(66,87,166);  
@@ -49,7 +61,7 @@ void drawTurtle(float x, float y, float angle, int turtle_id){
   //PAOTODO: Draw the legs + animation for the turtle!
   ellipseMode(CENTER);
   pushMatrix();
-    translate(x,y);
+    translate(x,y);fuio
     rotate(angle);
     ellipse(d/2, 0, d/3, d/3); //head
     ellipse(0,0,d,d); //body
@@ -75,4 +87,4 @@ void drawTurtle(float x, float y, float angle, int turtle_id){
     //arc(-d/4,d/4,,,0, PI);
     //arc(-d/4,-d/4,,,0, PI);
   popMatrix();  
-}
+}*/
