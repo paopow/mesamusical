@@ -1,4 +1,4 @@
-static final int BUBBLE_DIAM = 25;
+static final int BUBBLE_DIAM = 30;
 /****************************************
  class Bubble
  **************************************/
