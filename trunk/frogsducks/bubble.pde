@@ -25,9 +25,11 @@ class Bubble {
   }
 
   void display() {
-    stroke(119,173,175);
-    fill(119,173,175);
-    ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
+    PImage toDraw = bubble;
+   // stroke(119,173,175);
+   // fill(119,173,175);
+    //ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
+    image(toDraw, location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM);
   }
   
   boolean isOffScreen(){
