@@ -25,6 +25,7 @@ PFont font;
 PImage bg;
 PImage lily;
 PImage frog;
+PImage frogglow;
 PImage duck;
 
 Shooter shooter = null;
@@ -72,6 +73,7 @@ void loadImages() {
   lily = loadImage("lilypad.png");
   bg = loadImage("grass.jpg");
   frog = loadImage("frog.png");
+  frogglow = loadImage("frogglow.png");
   duck = loadImage("duck.gif");
 }
 
@@ -221,7 +223,7 @@ void drawBubbles(){
       int[] tag_id = new int[1];
       tag_id[0] = id;
       playNote(tag_id);
-      //drawRockGlow(id);
+      frogList[id].hit();
       bubbles.remove(i);
       i--;
     }else if(bubble.isOffScreen()){
@@ -243,7 +245,7 @@ void addTuioObject(TuioObject tobj) {
     case SHOOTER_ID2:
       shooter2 = new Shooter(tobj, 2); break;
     default: 
-      frogList[id].moveTo(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT), tobj.getAngle());
+      frogList[id] = new Frog(id, tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT), tobj.getAngle());
       frogList[id].setOnScreen(true);
       frogList[id].display();
       int[] thisInt = new int[2];
