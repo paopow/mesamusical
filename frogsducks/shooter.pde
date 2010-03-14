@@ -43,7 +43,12 @@ void drawDuck(float x, float y, float angle, int duck_id) {
     pushMatrix();
     translate(x,y);
     rotate(angle);
-    image(duck, 0, 0, object_size*3 , object_size*3);
+    int frame = frameCount%10;
+    if((frame >= 0)&&(frame <= 4)){
+      image(duck1, 0, 0, object_size*3 , object_size*3);
+    }else{
+      image(duck2,0,0,object_size*3 , object_size*3);
+    }
     popMatrix();
 }
 

@@ -27,6 +27,9 @@ PImage lily;
 PImage frog;
 PImage frogglow;
 PImage duck;
+PImage duck1;
+PImage duck2;
+PImage bubble;
 
 Shooter shooter = null;
 Shooter shooter2 = null;
@@ -73,8 +76,11 @@ void loadImages() {
   lily = loadImage("lilypad.png");
   bg = loadImage("grass.jpg");
   frog = loadImage("frog.png");
-  frogglow = loadImage("frogglow.png");
+  frogglow = loadImage("frogLilypad.gif");
   duck = loadImage("duck.gif");
+  duck1 = loadImage("duck1.gif");
+  duck2 = loadImage("duck2.gif");
+  bubble = loadImage("bubble.gif");
 }
 
 
