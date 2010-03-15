@@ -1,6 +1,8 @@
 /*****************************
   class Shooter
  *******************************/
+public static final int MAX_REMOVE_TIME = 100;
+ 
 class Shooter{
   float x;
   float y;
@@ -8,19 +10,39 @@ class Shooter{
   float angle;
   int duck_no;
   PImage duckImage;
+  boolean blockRemoved;
+  int removeTimer;
   
   Shooter(TuioObject clear_block, int duck_id ){
-     x = clear_block.getX()*WIDTH;
-     y = clear_block.getY()*HEIGHT;
+     x = clear_block.getX()*WIDTH - 100;
+     y = clear_block.getY()*HEIGHT - 100;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
      duck_no = duck_id;
      duckImage = loadImage("duck.gif");
+     removeTimer = 0;
+     blockRemoved = false;
   } 
   
+  float getX() {
+    return this.x;
+  }
+  
+  float getY() {
+    return this.y;
+  }
+  
+  void remove() {
+    blockRemoved = true;
+  }
+  
+  void resetRemove() {
+    blockRemoved = false;
+  }
+  
   void move(float new_x, float new_y){
-    x = new_x*WIDTH;
-    y = new_y*HEIGHT;
+    x = new_x*WIDTH - 100;
+    y = new_y*HEIGHT - 100;
   }
   
   void set_angle(float tag_angle){
@@ -34,62 +56,35 @@ class Shooter{
   }
   
   void shootBubble(){
-    bubbles.add(new Bubble(x + (4*object_size/2)*cos(angle)/2,y + (4*object_size/2)*sin(angle)/2,angle));
+    bubbles.add(new Bubble(x+ (4*object_size/2)*cos(angle)/2,y+ (4*object_size/2)*sin(angle)/2,angle));
   }
   
-}
+
+
+  boolean isReallyRemoved() {
+    if(blockRemoved && removeTimer > MAX_REMOVE_TIME) {
+      return true;
+    }
+    else return false;
+  }
 
 void drawDuck(float x, float y, float angle, int duck_id) {
     pushMatrix();
     translate(x,y);
     rotate(angle);
     int frame = frameCount%10;
+    if(blockRemoved) {
+      removeTimer++;
+    }
+    else {
+      removeTimer = 0;
+    }
     if((frame >= 0)&&(frame <= 4)){
       image(duck1, 0, 0, object_size*3 , object_size*3);
     }else{
-      image(duck2,0,0,object_size*3 , object_size*3);
+      image(duck2, 0, 0, object_size*3 , object_size*3);
     }
     popMatrix();
 }
 
-/*XXX keep for reference
-void drawTurtle(float x, float y, float angle, int turtle_id){
-  if(turtle_id == 1){
-    stroke(66,87,166);  
-    fill(66,87,166); 
-  }else if(turtle_id ==2){
-    stroke(157,57,166);
-    fill(157,57,166);
-  }
-  float d = 1.5*object_size*sqrt(2);
-  //PAOTODO change the color of the code later
-  //PAOTODO: Draw the legs + animation for the turtle!
-  ellipseMode(CENTER);
-  pushMatrix();
-    translate(x,y);fuio
-    rotate(angle);
-    ellipse(d/2, 0, d/3, d/3); //head
-    ellipse(0,0,d,d); //body
-    
-    //legs
-    pushMatrix();
-      rotate(-PI/2);
-      arc(0.15*d,0.10*d,d,0.6*d,0, PI);
-    popMatrix();
-    pushMatrix();
-      rotate(-PI/2);
-      arc(-0.15*d,0.1*d,d,0.6*d,0,PI);
-    popMatrix();
-    pushMatrix();
-      rotate(-PI/3);
-      arc(-0.15*d,-0.25*d,d,0.6*d,0,PI);
-    popMatrix();
-    pushMatrix();
-      rotate(-2*PI/3);
-      arc(0.15*d,-0.25*d,d,0.6*d,0,PI);
-    popMatrix();
-    //arc(d/4,-d/4,,,0, PI);
-    //arc(-d/4,d/4,,,0, PI);
-    //arc(-d/4,-d/4,,,0, PI);
-  popMatrix();  
-}*/
+}

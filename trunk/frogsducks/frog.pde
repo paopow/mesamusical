@@ -1,5 +1,6 @@
 static final int MAX_TIMES_TO_DRAW= 300;
 static final int MAX_TIMES_TO_DRAW_HIT = 30;
+static final int MAX_TIMES_HIT_BEFORE_JUMP = 3;
 /****************************************
  class Frog
  **************************************/
@@ -50,7 +51,45 @@ class Frog {
     this.angle = angle;
   }
   
+  boolean checkCollisionWithShooter() {
+    if(shooter!=null) {
+       if((this.getX()> shooter.getX()-obj_size*1.1)
+           &&(this.getX()< shooter.getX()+obj_size*1.1)
+           &&(this.getY()> shooter.getY()-obj_size*1.1)
+           &&(this.getY()< shooter.getY()+obj_size*1.1)){
+             playRibbit();
+             if(shooter.getX() < this.getX()) 
+               x += obj_size * 1.1;
+             else
+               x -= obj_size * 1.1;
+             if(shooter.getY() < this.getY())
+               y += obj_size * 1.1;
+             else
+               y -= obj_size * 1.1;
+             return true;
+           }
+    }
+    if(shooter2!=null) {
+         if((this.getX()> shooter2.getX()-obj_size*1.1)
+           &&(this.getX()< shooter2.getX()+obj_size*1.1)
+           &&(this.getY()> shooter2.getY()-obj_size*1.1)
+           &&(this.getY()< shooter2.getY()+obj_size*1.1)){
+             playRibbit();
+             if(shooter2.getX() < this.getX()) 
+               x += obj_size * 1.1;
+             else
+               x -= obj_size * 1.1;
+             if(shooter2.getY() < this.getY())
+               y += obj_size * 1.1;
+             else
+               y -= obj_size * 1.1;
+             return true;
+           }
+    }
+    return false;
+  }
   void display() {
+   checkCollisionWithShooter();
    PImage toDraw = frog;
    currX = this.x + jumpX;
    currY = this.y + jumpY;
@@ -112,15 +151,29 @@ class Frog {
     return onScreen;
   }
   
-  void hit() {
+  void hit(float bubbleX, float bubbleY) {
       this.hit = true;
+      this.numTimesHit++;
       numTimesDrawnSinceHit = 0;
       numTimesDrawn = 0;
+      println(bubbleX + ":" + bubbleY+ ":" + getX() + ":" + getY());
+      if(bubbleX < this.getX()) 
+        this.x += 10;
+      else
+        this.x -= 10;
+      if(bubbleY < this.getY())
+        this.y += 10;
+      else
+         this.y -= 10;
       if(jumpingOff) {
         jumpingOff = false;
         this.x = currX;
         this.y = currY;
       }
+      if(numTimesHit > MAX_TIMES_HIT_BEFORE_JUMP) {
+        jumpingOff = true;
+      }
+      
   }
  
   
