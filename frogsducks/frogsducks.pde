@@ -3,7 +3,11 @@
 import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
+import ddf.minim.*;
+import ddf.minim.signals.*;
 
+static final String DUCK_MP3_FILE = "duck.mp3";
+static final String FROG_MP3_FILE = "frog.mp3";
 static final int SHOOTER_ID = 34;
 static final int SHOOTER_ID2 = 33;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
@@ -31,6 +35,11 @@ PImage duck1;
 PImage duck2;
 PImage bubbleImages[];
 
+Minim minim;
+AudioOutput out;
+AudioPlayer duckPlayer;
+AudioPlayer frogPlayer;
+
 Shooter shooter = null;
 Shooter shooter2 = null;
 ArrayList bubbles;
@@ -46,7 +55,7 @@ void setup()
 {
   //size(screen.width,screen.height);
   size(WIDTH, HEIGHT);//, screen.height);
-  println(WIDTH + "," + HEIGHT);
+ //println(WIDTH + "," + HEIGHT);
  //println(screen.width + "," + screen.height);
   noStroke();
   //fill(0);
@@ -69,6 +78,10 @@ void setup()
   count = 0;
   initFrogList();
   loadImages();
+  minim = new Minim(this);
+  out = minim.getLineOut(Minim.MONO, 512);
+  duckPlayer = minim.loadFile(DUCK_MP3_FILE,2048);
+  frogPlayer = minim.loadFile(FROG_MP3_FILE,2048);
 }
 
 void loadImages() {
@@ -106,9 +119,9 @@ void initFrogList() {
       case 2:
         note = "D"; break;
       case 3:
-        note = "E"; break;
-      case 4:
         note = "E b"; break;
+      case 4:
+        note = "E"; break;
       case 5:
         note = "F"; break;
       case 6:
@@ -150,16 +163,22 @@ void draw()
 
 void shooterMach()
 {
+    if(shooter != null && shooter.isReallyRemoved()) shooter = null;
+    if(shooter2 !=null && shooter2.isReallyRemoved()) shooter2= null;
     if(shooter != null){
-       shooter.display();
+       shooter.display(); //can make it null?
+      if(shooter != null) {
       if(frameCount%shooter.tempo_ctrl == 0){
          shooter.shootBubble();
+      }
       }
     }
     if(shooter2 != null){
        shooter2.display();
-      if(frameCount%shooter2.tempo_ctrl == 0){
-         shooter2.shootBubble();
+      if(shooter2 != null) {
+        if(frameCount%shooter2.tempo_ctrl == 0){
+           shooter2.shootBubble();
+        }
       }
     }
 }
@@ -184,50 +203,42 @@ TuioObject getTObjForSymbolID(int symbolID) {
   return null;
 }
 
-/*
-void drawRipples(){  
-  strokeWeight(2);
-   for (int i = rippleList.size() - 1; i >= 0; i--) {
-     Ripple temp = (Ripple) rippleList.get(i);
-     if(temp.activated == true){
-       stroke(30, 94, 167);
-       noFill();
-       ellipseMode(CENTER);
-       ellipse(temp.x,temp.y, 2*temp.radius, 2*temp.radius);
-     }else{
-       stroke(166, 59, 59);
-       noFill();
-       ellipseMode(CENTER);
-       ellipse(temp.x,temp.y, 2*temp.radius, 2*temp.radius);
-     }
-     if (temp.update()) {
-       rippleList.remove(i);
-       
-       //println("Removed ripple");
-     } else {
-       //println("Kept ripple. Radius:" + temp.radius);
-     } 
-   }  
-   strokeWeight(1);
-}
-*/
 void drawBubbles(){
   for (int i = 0; i < bubbles.size(); i++) {
     Bubble bubble = (Bubble) bubbles.get(i);
     bubble.update();
     bubble.display(); 
+    if(bubble.checkHitDuck()) {
+      println("removing");
+      bubbles.remove(i);
+      i--;
+    }
     int id = bubble.hitFrogID();
     if(id != -1){
       int[] tag_id = new int[1];
       tag_id[0] = id;
       playNote(tag_id);
-      frogList[id].hit();
+      frogList[id].hit(bubble.getX(), bubble.getY());
       bubbles.remove(i);
       i--;
     }else if(bubble.isOffScreen()){
       bubbles.remove(i);
       i--;
     }
+  }
+}
+
+void playQuack() {
+  if(!duckPlayer.isPlaying()) {
+    duckPlayer.play();
+    duckPlayer.rewind();
+  }
+}
+
+void playRibbit() {
+  if(!frogPlayer.isPlaying()) {
+    frogPlayer.play();
+    frogPlayer.rewind();
   }
 }
 
@@ -239,9 +250,15 @@ void addTuioObject(TuioObject tobj) {
   int id = tobj.getSymbolID() % NUM_NOTES;
   switch(id) {
     case SHOOTER_ID:
-      shooter = new Shooter(tobj, 1); break;
+    if(shooter !=null) shooter.resetRemove();
+    else
+      shooter = new Shooter(tobj, 1); 
+    break;
     case SHOOTER_ID2:
-      shooter2 = new Shooter(tobj, 2); break;
+    if(shooter2 !=null) shooter2.resetRemove();
+    else
+      shooter2 = new Shooter(tobj, 2); 
+     break;
     default: 
       frogList[id] = new Frog(id, tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT), tobj.getAngle());
       frogList[id].setOnScreen(true);
@@ -254,10 +271,14 @@ void addTuioObject(TuioObject tobj) {
 
 void removeTuioObject(TuioObject tobj) {
    if(tobj.getSymbolID() == SHOOTER_ID2){
-   shooter2 = null; 
+     if(shooter != null) {
+       shooter2.remove();
+     }
   }
   if(tobj.getSymbolID() == SHOOTER_ID){
-   shooter = null; 
+    if(shooter != null) {
+      shooter.remove();
+    }
   }//else{
   // ripple(tobj); 
   //}
@@ -265,10 +286,11 @@ void removeTuioObject(TuioObject tobj) {
 }
 
 void updateTuioObject (TuioObject tobj) {
-  if(tobj.getSymbolID() == SHOOTER_ID){
+  if(tobj.getSymbolID() == SHOOTER_ID && shooter != null){
     shooter.move(tobj.getX(),tobj.getY());
     shooter.set_angle(tobj.getAngle());
-  }else if(tobj.getSymbolID() == SHOOTER_ID2){
+    println(tobj.getAngle());
+  }else if(tobj.getSymbolID() == SHOOTER_ID2 && shooter2 != null){
     shooter2.move(tobj.getX(),tobj.getY());
     shooter2.set_angle(tobj.getAngle());
   }

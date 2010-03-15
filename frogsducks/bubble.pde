@@ -18,6 +18,14 @@ class Bubble {
     topspeed = 8;
   }
 
+  float getX() {
+    return location.x;
+  }
+  
+  float getY() {
+    return location.y;
+  }
+
   void update() {
     velocity.add(acceleration);
     velocity.limit(topspeed);
@@ -41,11 +49,34 @@ class Bubble {
      return ((location.x > WIDTH)||(location.x < 0)||(location.y >HEIGHT) ||(location.y<0));
   }
   
+  boolean checkHitDuck() {
+ 
+    if(shooter!=null) {
+       if((location.x> shooter.getX()-BUBBLE_DIAM)
+           &&(location.x< shooter.getX()+BUBBLE_DIAM)
+           &&(location.y> shooter.getY()-BUBBLE_DIAM)
+           &&(location.y< shooter.getY()+BUBBLE_DIAM)){
+             playQuack();
+             return true;
+           }
+    }
+    if(shooter2!=null) {
+         if((location.x> shooter2.getX()-BUBBLE_DIAM)
+           &&(location.x< shooter2.getX()+BUBBLE_DIAM)
+           &&(location.y> shooter2.getY()-BUBBLE_DIAM)
+           &&(location.y< shooter2.getY()+BUBBLE_DIAM)){
+             playQuack();
+             return true;
+           }
+    }
+    return false;
+  }
+  
   int hitFrogID(){
     for (int i=0;i<NUM_FROGS;i++) {
        Frog f = frogList[i];
        if(f.isOnScreen()) {
-         println(location.x + ":" + location.y + ":" + f.getX() + ":" + f.getY());
+        
          if((location.x> f.getX()-BUBBLE_DIAM*2)
            &&(location.x< f.getX()+BUBBLE_DIAM*2)
            &&(location.y> f.getY()-BUBBLE_DIAM*2)
