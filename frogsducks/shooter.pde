@@ -10,8 +10,8 @@ class Shooter{
   PImage duckImage;
   
   Shooter(TuioObject clear_block, int duck_id ){
-     x = clear_block.getX()*width;
-     y = clear_block.getY()*height;
+     x = clear_block.getX()*WIDTH;
+     y = clear_block.getY()*HEIGHT;
      angle = clear_block.getAngle();  
      tempo_ctrl = 15;
      duck_no = duck_id;
@@ -19,8 +19,8 @@ class Shooter{
   } 
   
   void move(float new_x, float new_y){
-    x = new_x*width;
-    y = new_y*height;
+    x = new_x*WIDTH;
+    y = new_y*HEIGHT;
   }
   
   void set_angle(float tag_angle){

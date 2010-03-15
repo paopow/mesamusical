@@ -1,4 +1,4 @@
-static final int MAX_TIMES_TO_DRAW= 3000;
+static final int MAX_TIMES_TO_DRAW= 300;
 static final int MAX_TIMES_TO_DRAW_HIT = 30;
 /****************************************
  class Frog
@@ -13,6 +13,9 @@ class Frog {
   int numTimesHit; //so we can make it leave the screen after its been hit x times
   int numTimesDrawnSinceHit; //draw glowing for a few times
   int numTimesDrawn; //leaves screen after a while
+  boolean jumpingOff;
+  float jumpX, jumpY;
+  float currX, currY;
   
   Frog(int id, float x, float y, float angle) {
     this.id = id;
@@ -24,14 +27,17 @@ class Frog {
     this.numTimesDrawn = 0;
     this.numTimesHit = 0;
     this.numTimesDrawnSinceHit = 0;
+    this.jumpingOff = false;
   }
   
   float getX() {
-    return this.x;
+    if(jumpingOff) return this.currX;
+    else return this.x;
   }
   
   float getY() {
-    return this.y;
+    if(jumpingOff) return this.currY;
+    else return this.y;
   }
   
   int getID() {
@@ -45,7 +51,14 @@ class Frog {
   }
   
   void display() {
-    PImage toDraw = frog;
+   PImage toDraw = frog;
+   currX = this.x + jumpX;
+   currY = this.y + jumpY;
+
+   if(currX < 0 || currY < 0) {
+     this.remove();
+   }
+   else {
    if(this.hit) {
       if(this.numTimesDrawnSinceHit < MAX_TIMES_TO_DRAW_HIT) {
         this.numTimesDrawnSinceHit++;
@@ -63,6 +76,12 @@ class Frog {
     translate(x, y);
     rotate(angle);
     image(lily, 0, 0, obj_size*2.2,obj_size*2.2);
+    if(this.jumpingOff) {
+      jumpX -= 5;
+      jumpY -= 5;
+      translate(jumpX, jumpY);
+      text("Bye!", -obj_size, -obj_size);
+    }
     image(toDraw, 0, 0, obj_size*2.2,obj_size*2.2);
     textAlign(CENTER);
     textFont(font,24*scale_factor);
@@ -70,13 +89,17 @@ class Frog {
     popMatrix();
 
     numTimesDrawn++;
-    if(numTimesDrawn > MAX_TIMES_TO_DRAW) {
-      this.remove();
+    if(!this.jumpingOff) {
+      if(numTimesDrawn > MAX_TIMES_TO_DRAW) {
+       this.jumpingOff = true;
+       this.jumpX = 0;
+       this.jumpY = 0;
     }
+    }
+   }
   }
   
   void remove() {
-     text("Bye!", x, y);
      this.setOnScreen(false);
   }
   
@@ -90,8 +113,14 @@ class Frog {
   }
   
   void hit() {
-    this.hit = true;
-    numTimesDrawnSinceHit = 0;
+      this.hit = true;
+      numTimesDrawnSinceHit = 0;
+      numTimesDrawn = 0;
+      if(jumpingOff) {
+        jumpingOff = false;
+        this.x = currX;
+        this.y = currY;
+      }
   }
  
   
