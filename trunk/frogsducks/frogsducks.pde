@@ -72,6 +72,7 @@ void setup()
 }
 
 void loadImages() {
+  imageMode(CENTER);
   //rock = loadImage("stone1.gif");
   lily = loadImage("lilypad.png");
   bg = loadImage("grass.png");
@@ -167,15 +168,16 @@ void initFrogList() {
 
 void draw()
 {
+  imageMode(CENTER);
   background(94, 167, 30);
-  image(bg, 0, 0, WIDTH, HEIGHT);
+  image(bg, WIDTH/2, HEIGHT/2, WIDTH, HEIGHT);
   //drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
+    drawFrogs();
    shooterMach();  
   //drawRipples();
-  drawFrogs();
  
 
   drawBubbles();
