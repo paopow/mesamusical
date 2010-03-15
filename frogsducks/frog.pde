@@ -1,4 +1,4 @@
-static final int MAX_TIMES_TO_DRAW= 200;
+static final int MAX_TIMES_TO_DRAW= 10000;
 static final int MAX_TIMES_TO_DRAW_HIT = 30;
 /****************************************
  class Frog
@@ -24,6 +24,18 @@ class Frog {
     this.numTimesDrawn = 0;
     this.numTimesHit = 0;
     this.numTimesDrawnSinceHit = 0;
+  }
+  
+  float getX() {
+    return this.x;
+  }
+  
+  float getY() {
+    return this.y;
+  }
+  
+  int getID() {
+    return this.id;
   }
   
   void moveTo(float x, float y, float angle) {
