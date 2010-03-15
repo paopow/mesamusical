@@ -76,7 +76,7 @@ void loadImages() {
   lily = loadImage("lilypad.png");
   bg = loadImage("grass.jpg");
   frog = loadImage("frog.png");
-  frogglow = loadImage("frogLilypad.gif");
+  frogglow = loadImage("frogglow.png");
   duck = loadImage("duck.gif");
   duck1 = loadImage("duck1.gif");
   duck2 = loadImage("duck2.gif");
@@ -147,11 +147,11 @@ void draw()
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 
   float cur_size = cursor_size*scale_factor; 
-  
-  shooterMach();   
-
+ 
   //drawRipples();
   drawFrogs();
+  shooterMach();   
+
   drawBubbles();
 
 }
@@ -224,7 +224,7 @@ void drawBubbles(){
     Bubble bubble = (Bubble) bubbles.get(i);
     bubble.update();
     bubble.display(); 
-    int id = bubble.hitRockID();
+    int id = bubble.hitFrogID();
     if(id != -1){
       int[] tag_id = new int[1];
       tag_id[0] = id;
