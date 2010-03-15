@@ -59,12 +59,16 @@ class Frog {
     stroke(229, 0, 0);
     fill(229, 0, 0);
     pushMatrix();
+    imageMode(CENTER);
     translate(x, y);
     rotate(angle);
-    image(lily, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
-    image(toDraw, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
+    image(lily, 0, 0, obj_size*2.2,obj_size*2.2);
+    image(toDraw, 0, 0, obj_size*2.2,obj_size*2.2);
+    textAlign(CENTER);
+    textFont(font,24*scale_factor);
+    text("" +idToNote.get(id), 0, 0);
     popMatrix();
-    text("" +idToNote.get(id), x, y);
+
     numTimesDrawn++;
     if(numTimesDrawn > MAX_TIMES_TO_DRAW) {
       this.remove();
