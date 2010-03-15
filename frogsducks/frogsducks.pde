@@ -14,7 +14,7 @@ static final int NUM_FROGS = 36;
 SoundCipher[] sc_array = new SoundCipher[NUM_SC]; 
 SCScore score = new SCScore(); //may not need this
 static int curr_sc = 0;
-
+HashMap idToNote;
 // these are some helper variables which are used
 // to create scalable graphical feedback
 float cursor_size = 15;
@@ -74,7 +74,7 @@ void setup()
 void loadImages() {
   //rock = loadImage("stone1.gif");
   lily = loadImage("lilypad.png");
-  bg = loadImage("grass.jpg");
+  bg = loadImage("grass.png");
   frog = loadImage("frog.png");
   frogglow = loadImage("frogglow.png");
   duck = loadImage("duck.gif");
@@ -130,19 +130,45 @@ void initFrogList() {
     Frog temp = new Frog(i,0.0,0.0, 0.0);
     frogList[i] = temp;
   }
-  
-  /*
-  int[] tempArr = new int[3];
-  tempArr[0] = 1; tempArr[1] = 2; tempArr[2] = 3;
-  rock temp = new rock(tempArr);
-  rockList[0] = temp;
-  */
+  idToNote = new HashMap();
+  for(int i=0; i< NUM_FROGS; i++) {
+    String note = "";
+    switch(i%12) {
+      case 0:
+        note = "C"; break;
+      case 1:
+        note = "C#"; break;
+      case 2:
+        note = "D"; break;
+      case 3:
+        note = "E"; break;
+      case 4:
+        note = "E b"; break;
+      case 5:
+        note = "F"; break;
+      case 6:
+        note = "F #"; break; 
+      case 7:
+        note = "G"; break;
+      case 8:
+        note = "A b"; break;
+      case 9:
+        note = "A"; break; 
+      case 10:
+        note = "B b"; break;
+      case 11:
+        note = "B"; break;
+      default:
+        note = "C"; break;
+    }
+    idToNote.put(i, note);
+  }
 }
 
 void draw()
 {
   background(94, 167, 30);
-  image(bg, 0, 0, 1200, 800);
+  image(bg, 0, 0, WIDTH, HEIGHT);
   //drawCircle();
   textFont(font,18*scale_factor);
   obj_size = object_size*scale_factor; 

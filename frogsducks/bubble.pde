@@ -41,10 +41,10 @@ class Bubble {
        Frog f = frogList[i];
        if(f.isOnScreen()) {
          println(location.x + ":" + location.y + ":" + f.getX() + ":" + f.getY());
-         if((location.x> f.getX()-2*obj_size)
-           &&(location.x< f.getX()+2*obj_size)
-           &&(location.y> f.getY()-2*obj_size)
-           &&(location.y< f.getY()+2*obj_size)){
+         if((location.x> f.getX()-BUBBLE_DIAM)
+           &&(location.x< f.getX()+BUBBLE_DIAM)
+           &&(location.y> f.getY()-BUBBLE_DIAM)
+           &&(location.y< f.getY()+BUBBLE_DIAM)){
              return f.getID();
            }
        }
