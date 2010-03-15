@@ -4,7 +4,7 @@ import arb.soundcipher.*;
 import TUIO.*;
 TuioProcessing tuioClient;
 
-static final int SHOOTER_ID = 35;
+static final int SHOOTER_ID = 33;
 static final int SHOOTER_ID2 = 34;
 static final int NUM_NOTES = 36; //3 octaves include sharp and flat
 static final int NUM_SC = 4;
@@ -185,10 +185,10 @@ void drawRocks(){
        pushMatrix();
        translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
        rotate(tobj.getAngle());
-       image(rock, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
+       image(rock, -obj_size*1.2,-obj_size*1.2,obj_size*2.4,obj_size*2.4);
        popMatrix();
        fill(167, 57, 30);
-       text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
+       //text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
      }
    }
 }
@@ -209,10 +209,10 @@ void drawRockGlow(int symbolID) {
   pushMatrix();
   translate(tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
   rotate(tobj.getAngle());
-  image(rockGlow, -obj_size*1.1,-obj_size*1.1,obj_size*2.2,obj_size*2.2);
+  image(rockGlow, -obj_size*1.2,-obj_size*1.2,obj_size*2.4,obj_size*2.4);
   popMatrix();
   fill(167, 57, 30);
-  text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
+  //text(""+tobj.getSymbolID(), tobj.getScreenX(WIDTH), tobj.getScreenY(HEIGHT));
 }
 
 void drawRipples(){  
@@ -354,7 +354,7 @@ void playNote(int[] id){
 float getNote(int id)
 {
   id = id%NUM_NOTES; //48 is low C, 60 is mid C, 72 is high C 
-  return id + 48; 
+  return id + 60; 
 }
 
 void ripple(TuioObject tobj) {
