@@ -25,11 +25,16 @@ class Bubble {
   }
 
   void display() {
-    PImage toDraw = bubble;
+    int rand = int(random(0, 3));
+    PImage toDraw = bubbleImages[rand];
    // stroke(119,173,175);
    // fill(119,173,175);
     //ellipse(location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM); 
+    pushMatrix();
+
+    imageMode(CENTER);
     image(toDraw, location.x,location.y,BUBBLE_DIAM,BUBBLE_DIAM);
+    popMatrix();
   }
   
   boolean isOffScreen(){
@@ -41,10 +46,10 @@ class Bubble {
        Frog f = frogList[i];
        if(f.isOnScreen()) {
          println(location.x + ":" + location.y + ":" + f.getX() + ":" + f.getY());
-         if((location.x> f.getX()-BUBBLE_DIAM)
-           &&(location.x< f.getX()+BUBBLE_DIAM)
-           &&(location.y> f.getY()-BUBBLE_DIAM)
-           &&(location.y< f.getY()+BUBBLE_DIAM)){
+         if((location.x> f.getX()-BUBBLE_DIAM*2)
+           &&(location.x< f.getX()+BUBBLE_DIAM*2)
+           &&(location.y> f.getY()-BUBBLE_DIAM*2)
+           &&(location.y< f.getY()+BUBBLE_DIAM*2)){
              return f.getID();
            }
        }

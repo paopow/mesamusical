@@ -29,7 +29,7 @@ PImage frogglow;
 PImage duck;
 PImage duck1;
 PImage duck2;
-PImage bubble;
+PImage bubbleImages[];
 
 Shooter shooter = null;
 Shooter shooter2 = null;
@@ -72,6 +72,7 @@ void setup()
 }
 
 void loadImages() {
+  bubbleImages = new PImage[3];
   imageMode(CENTER);
   //rock = loadImage("stone1.gif");
   lily = loadImage("lilypad.png");
@@ -81,52 +82,15 @@ void loadImages() {
   duck = loadImage("duck.gif");
   duck1 = loadImage("duck1.gif");
   duck2 = loadImage("duck2.gif");
-  bubble = loadImage("bubble.gif");
+  bubbleImages[0] = loadImage("bubble1.png");
+  bubbleImages[1] = loadImage("bubble2.png");
+  bubbleImages[2] = loadImage("bubble3.png");
 }
 
 
 //This will init an array of rock objects, indexed by their id numbers, rockList.
 void initFrogList() {
   
-  int index = 0;
-  /*
- int[] noteList = {12, 16, 19,
-                    14, 18, 21,
-                    16, 20, 23,
-                    17, 21, 24,
-                    19, 23, 26,
-                    21, 25, 28,
-                    23, 27, 30,
-                    24, 28, 31,
-                    16, 19, 24,
-                    14, 19, 23,
-                    14, 19, 20,
-                    12, 17, 21,
-                    17, 19, 23,
-                    14, 16, 17,
-                    12, 24, 36,
-                    12, 12, 19,
-                    16, 20, 16,
-                    24, 19, 24,
-                    16, 35, 20,
-                    16, 23, 32,
-                    14, 15, 16,
-                    21, 22, 23,
-                    23, 20, 23,
-                    14, 15, 29,
-                    17, 22, 24,
-                    21, 24, 26,
-                    21, 22, 36,
-                    23, 14, 19,
-                    21, 30, 26,
-                    16, 31, 36,
-                    24, 21, 12,
-                    19, 36, 16,
-                    17, 22, 20,
-                    19, 16, 12,
-                    14, 17, 21,
-                    12, 15, 19};
-  */
   for(int i = 0; i < NUM_FROGS; i++) {
     Frog temp = new Frog(i,0.0,0.0, 0.0);
     frogList[i] = temp;
